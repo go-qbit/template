@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"github.com/go-qbit/qerror"
 	"strings"
+	"github.com/davecgh/go-spew/spew"
 )
 
 type Template struct {
@@ -66,6 +67,8 @@ func (t *Template) Parse(text string) error {
 	if lexer.err != nil {
 		return lexer.err
 	}
+
+	spew.Dump(lexer.result)
 
 	return nil
 }

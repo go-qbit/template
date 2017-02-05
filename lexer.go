@@ -8,8 +8,9 @@ import (
 )
 
 type exprLex struct {
-	text string
-	err  error
+	text   string
+	err    error
+	result iAstNode
 }
 
 type simpleToken struct {
@@ -105,7 +106,7 @@ func (x *exprLex) Error(s string) {
 
 func tokenName(c int) string {
 	if c > yyPrivate {
-		c -= yyPrivate -1
+		c -= yyPrivate - 1
 	}
 	if c >= 0 && c < len(yyToknames) {
 		if yyToknames[c] != "" {

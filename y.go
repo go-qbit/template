@@ -7,8 +7,9 @@ import (
 
 //line template.y:9
 type yySymType struct {
-	yys    int
-	string string
+	yys      int
+	string   string
+	iAstNode iAstNode
 }
 
 const IDENTIFIER = 57346
@@ -40,7 +41,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line template.y:36
+//line template.y:40
 //line yacctab:1
 var yyExca = [...]int{
 	-1, 1,
@@ -54,40 +55,39 @@ const yyPrivate = 57344
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 21
+const yyLast = 20
 
 var yyAct = [...]int{
 
-	2, 5, 3, 4, 7, 1, 15, 13, 16, 10,
-	8, 5, 3, 4, 7, 12, 10, 11, 9, 14,
-	6,
+	3, 5, 4, 2, 7, 15, 13, 8, 16, 10,
+	5, 4, 11, 7, 12, 9, 10, 14, 6, 1,
 }
 var yyPact = [...]int{
 
-	7, -2, -1000, -1000, -1000, -1000, -1000, 14, 7, 9,
-	-1000, 11, -5, 7, -6, -3, -1000,
+	6, -1000, -5, -1000, -1000, -1000, -1000, 11, 6, 4,
+	-1000, 10, -6, 6, -7, -3, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 5, 0, 20,
+	0, 19, 3, 0, 18,
 }
 var yyR1 = [...]int{
 
-	0, 1, 1, 2, 2, 2, 2, 2, 3,
+	0, 1, 2, 2, 3, 3, 3, 3, 4,
 }
 var yyR2 = [...]int{
 
-	0, 1, 3, 0, 1, 1, 1, 1, 8,
+	0, 1, 1, 3, 0, 1, 1, 1, 8,
 }
 var yyChk = [...]int{
 
-	-1000, -1, -2, 5, 6, 4, -3, 7, 12, 4,
-	-2, 8, 4, 12, -1, 12, 11,
+	-1000, -1, -2, -3, 5, 4, -4, 7, 12, 4,
+	-3, 8, 4, 12, -2, 12, 11,
 }
 var yyDef = [...]int{
 
-	3, -2, 1, 4, 5, 6, 7, 0, 3, 0,
-	2, 0, 0, 3, 0, 3, 8,
+	4, -2, 1, 2, 5, 6, 7, 0, 4, 0,
+	3, 0, 0, 4, 0, 4, 8,
 }
 var yyTok1 = [...]int{
 
@@ -443,6 +443,54 @@ yydefault:
 	// dummy call; replaced with literal code
 	switch yynt {
 
+	case 1:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line template.y:28
+		{
+			yylex.(*exprLex).result = yyVAL.iAstNode
+		}
+	case 2:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line template.y:30
+		{
+			yyVAL.iAstNode = &astList{[]iAstNode{yyDollar[1].iAstNode}}
+		}
+	case 3:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line template.y:31
+		{
+			yyVAL.iAstNode.(*astList).children = append(yyVAL.iAstNode.(*astList).children, yyDollar[3].iAstNode)
+		}
+	case 4:
+		yyDollar = yyS[yypt-0 : yypt+1]
+		//line template.y:33
+		{
+			yyVAL.iAstNode = nil
+		}
+	case 5:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line template.y:34
+		{
+			yyVAL.iAstNode = &astString{yyDollar[1].string}
+		}
+	case 6:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line template.y:35
+		{
+			yyVAL.iAstNode = &astString{yyDollar[1].string}
+		}
+	case 7:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line template.y:36
+		{
+			yyVAL.iAstNode = yyDollar[1].iAstNode
+		}
+	case 8:
+		yyDollar = yyS[yypt-8 : yypt+1]
+		//line template.y:39
+		{
+			yyVAL.iAstNode = &astLoop{yyDollar[2].string, yyDollar[4].string, yyDollar[6].iAstNode}
+		}
 	}
 	goto yystack /* stack new state and value */
 }
