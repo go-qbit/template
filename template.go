@@ -4,12 +4,16 @@ package template
 
 import (
 	"bytes"
-	"github.com/go-qbit/qerror"
+	"go/format"
+	"io"
+	"io/ioutil"
 	"strings"
-	"github.com/davecgh/go-spew/spew"
+
+	"github.com/go-qbit/qerror"
 )
 
 type Template struct {
+	astTree iAstNode
 }
 
 func New() *Template {
@@ -24,7 +28,7 @@ func (t *Template) Parse(text string) error {
 
 	for pos >= 0 && pos < len(text) {
 		if inBlock {
-			newPos := strings.Index(text[pos+2:], "%]")
+			newPos := strings.Index(text[pos:], "%]")
 
 			if newPos < 0 {
 				return qerror.New("Unclosed [%")
@@ -32,26 +36,24 @@ func (t *Template) Parse(text string) error {
 
 			inBlock = false
 
-			buf.WriteString(text[pos+2 : pos+newPos+2])
+			buf.WriteString(text[pos : pos+newPos])
 			buf.WriteByte(';')
 
 			pos += newPos + 2
 		} else {
-			newPos := strings.Index(text[pos+2:], "[%")
+			newPos := strings.Index(text[pos:], "[%")
 
 			if newPos < 0 {
-				buf.WriteString(strQuote(text[pos+2:]))
+				buf.WriteString(strQuote(text[pos:]))
 				buf.WriteByte(';')
 				break
 			}
 
 			inBlock = true
-			if pos == 0 {
-				buf.WriteString(strQuote(text[:pos+2+newPos]))
-			} else {
-				buf.WriteString(strQuote(text[pos+2 : pos+2+newPos]))
+			if newPos != 0 {
+				buf.WriteString(strQuote(text[pos : pos+newPos]))
+				buf.WriteByte(';')
 			}
-			buf.WriteByte(';')
 
 			pos += newPos + 2
 		}
@@ -68,9 +70,36 @@ func (t *Template) Parse(text string) error {
 		return lexer.err
 	}
 
-	spew.Dump(lexer.result)
+	t.astTree = lexer.result
+	//spew.Dump(lexer.result)
 
 	return nil
+}
+
+func (t *Template) ParseFile(filename string) error {
+	data, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+
+	return t.Parse(string(data))
+}
+
+func (t *Template) WriteGo(w io.Writer, packageName, templateId string) {
+	buf := &bytes.Buffer{}
+
+	t.astTree.WriteGo(buf, &GenGoOpts{
+		PackageName: packageName,
+		TemplateId:  templateId,
+	})
+
+	source, err := format.Source(buf.Bytes())
+	if err != nil {
+		println(buf.String())
+		panic(err)
+	}
+
+	w.Write(source)
 }
 
 func strQuote(s string) string {

@@ -1,0 +1,13 @@
+[%
+    VARS (header string, users []User)
+%]
+<!DOCTYPE html>
+<html>
+<body>
+    [% header %]
+    <hr>
+    [% FOR user IN users %]
+        <p>[% user.Name %] [% user.Lastname %]</p>
+    [% END %]
+</<body>
+</html>

@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+var yyLexDebug = false
+
 type exprLex struct {
 	text   string
 	err    error
@@ -34,6 +36,8 @@ var simpleTokens = []simpleToken{
 	{"FOR", FOR},
 	{"ELSE", ELSE},
 	{"END", END},
+	{"VARS", VARS},
+	{"IMPORT", IMPORT},
 }
 
 var reTokens = []reToken{
@@ -68,7 +72,9 @@ func (x *exprLex) Lex(yylval *yySymType) int {
 				x.text = x.text[len(token.token):]
 				yylval.string = token.token
 
-				fmt.Println("SIMPLE TOKEN ", tokenName(token.value))
+				if yyLexDebug {
+					fmt.Println("SIMPLE TOKEN ", tokenName(token.value))
+				}
 
 				return token.value
 			}
@@ -79,7 +85,9 @@ func (x *exprLex) Lex(yylval *yySymType) int {
 				x.text = x.text[len(m):]
 				yylval.string = string(m)
 
-				fmt.Println("TOKEN ", tokenName(token.value), yylval.string)
+				if yyLexDebug {
+					fmt.Println("TOKEN ", tokenName(token.value), yylval.string)
+				}
 
 				return token.value
 			}
@@ -92,7 +100,9 @@ func (x *exprLex) Lex(yylval *yySymType) int {
 		case ' ', '\t', '\n', '\r':
 			continue
 		default:
-			fmt.Println("TOKEN ", string(c))
+			if yyLexDebug {
+				fmt.Println("TOKEN ", string(c))
+			}
 			return int(c)
 		}
 	}
