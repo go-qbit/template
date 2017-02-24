@@ -7,7 +7,7 @@
     <h1>[% header | HTML %]</h1>
     <hr>
     [% FOR user IN users %]
-        <p>[% user.Name | HTML %] [% user.Lastname | HTML %]</p>
+        <p>[% user.Name | HTML %] [% user.Lastname | HTML %]: [% user.Age %]</p>
     [% END %]
 </<body>
 </html>

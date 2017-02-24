@@ -15,6 +15,8 @@ func ProcessTest(w io.Writer, header string, users []User) {
 		io.WriteString(w, fmt.Sprint(filter.HTML(user.Name)))
 		io.WriteString(w, " ")
 		io.WriteString(w, fmt.Sprint(filter.HTML(user.Lastname)))
+		io.WriteString(w, ": ")
+		io.WriteString(w, fmt.Sprint(user.Age))
 		io.WriteString(w, "</p>\n    ")
 	}
 	io.WriteString(w, "\n</<body>\n</html>\n")
