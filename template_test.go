@@ -12,7 +12,9 @@ import (
 func TestTemplate_Parse(t *testing.T) {
 	tpl := template.New()
 
-	assert.NoError(t, tpl.ParseFile("test/templates/index.gtt"))
+	if !assert.NoError(t, tpl.ParseFile("test/templates/index.gtt")) {
+		return
+	}
 
 	buf := &bytes.Buffer{}
 	tpl.WriteGo(buf, "test", "Test")

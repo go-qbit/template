@@ -9,6 +9,8 @@ import (
 %union {
     string      string
 	iAstNode    iAstNode
+	astFilter   *astFilter
+	astOutput   *astOutput
 }
 
 %token  IDENTIFIER
@@ -23,7 +25,8 @@ import (
 %token  IMPORT
 
 %type   <string>    STRING IDENTIFIER NUMBER var_type
-%type	<iAstNode>  top template header imports import_list vars var_list var expr_list expr loop
+%type	<iAstNode>  top template header imports import_list vars var_list var expr_list expr output loop
+%type   <astFilter> filter
 
 %%
 
@@ -55,9 +58,17 @@ expr_list:  expr                        { $$ = &astList{[]iAstNode{$1}} }
         |   expr_list ';' expr          { $$.(*astList).children = append($$.(*astList).children, $3) }
 
 expr:                                   { $$ = nil }
-        |   STRING                      { $$ = &astString{$1} }
-        |   IDENTIFIER                  { $$ = &astWriteValue{$1} }
+        |   STRING                      { $$ = &astWriteString{$1} }
+        |   output                      { $$ = &astWriteValue{$1} }
         |   loop                        { $$ = $1 }
+
+output:     IDENTIFIER                  { $$ = &astValue{$1} }
+        |   STRING '|' filter           { $3.value = &astString{$1}; $$ = $3 }
+        |   output '|' filter           { $3.value = $1; $$ = $3 }
+
+filter:     IDENTIFIER                  { $$ = &astFilter{name: $1} }
+        |   IDENTIFIER '(' ')'          { $$ = &astFilter{name: $1} }
+
 
 loop:   FOR IDENTIFIER IN IDENTIFIER ';' expr_list ';' END
                                 { $$ = &astLoop{$2, &astValue{$4}, $6} }

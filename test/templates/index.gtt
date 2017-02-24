@@ -4,10 +4,10 @@
 <!DOCTYPE html>
 <html>
 <body>
-    [% header %]
+    <h1>[% header | HTML %]</h1>
     <hr>
     [% FOR user IN users %]
-        <p>[% user.Name %] [% user.Lastname %]</p>
+        <p>[% user.Name | HTML %] [% user.Lastname | HTML %]</p>
     [% END %]
 </<body>
 </html>

@@ -20,7 +20,7 @@ type astString struct {
 }
 
 func (n *astString) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "io.WriteString(w,"+strings.Replace(n.value, "\n", `\n`, -1)+")\n")
+	io.WriteString(w, strings.Replace(n.value, "\n", `\n`, -1))
 }
 
 type astValue struct {
@@ -32,11 +32,24 @@ func (n *astValue) WriteGo(w io.Writer, opts *GenGoOpts) {
 }
 
 type astWriteValue struct {
-	name string
+	value iAstNode
 }
 
 func (n *astWriteValue) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "io.WriteString(w, fmt.Sprint("+n.name+"))\n")
+	io.WriteString(w, "io.WriteString(w, fmt.Sprint(")
+	n.value.WriteGo(w, opts)
+	io.WriteString(w, "))\n")
+}
+
+type astWriteString struct {
+	value string
+}
+
+func (n *astWriteString) WriteGo(w io.Writer, opts *GenGoOpts) {
+	io.WriteString(w, "io.WriteString(w, ")
+	s := &astString{n.value}
+	s.WriteGo(w, opts)
+	io.WriteString(w, ")\n")
 }
 
 type astList struct {
@@ -92,6 +105,7 @@ func (n *astHeader) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "import (\n")
 	io.WriteString(w, "\"fmt\"\n")
 	io.WriteString(w, "\"io\"\n")
+	io.WriteString(w, "\"github.com/go-qbit/template/filter\"\n")
 	if n.imports != nil {
 		for _, pkgName := range n.imports.(*astList).children {
 			pkgName.WriteGo(w, opts)
@@ -131,4 +145,23 @@ type astImport struct {
 
 func (n *astImport) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, n.pkgName+"\n")
+}
+
+type astOutput struct {
+	value iAstNode
+}
+
+func (n *astOutput) WriteGo(w io.Writer, opts *GenGoOpts) {
+	n.value.WriteGo(w, opts)
+}
+
+type astFilter struct {
+	name  string
+	value iAstNode
+}
+
+func (n *astFilter) WriteGo(w io.Writer, opts *GenGoOpts) {
+	io.WriteString(w, "filter."+n.name+"(")
+	n.value.WriteGo(w, opts)
+	io.WriteString(w, ")")
 }
