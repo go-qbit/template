@@ -16,10 +16,14 @@ const coreTemplate = `<!DOCTYPE html>
     <h1>{{ .Header }}</h1>
     <hr>
     {{range .Users }}
-        <p>{{ .Name }} {{ .Lastname }}: {{ .Age }}</p>
+        <p>
+        	{{ .Name }} {{ .Lastname }}:
+        	{{ .Age }} ({{if .IsMan }}Man{{else}}Woman{{end}})
+        </p>
     {{ end }}
-</<body>
-</html>`
+</body>
+</html>
+`
 
 var coreTpl *template.Template
 var BenchmarkUsers []User
@@ -33,22 +37,30 @@ func init() {
 
 	BenchmarkUsers = make([]User, 1000)
 	for i := 0; i < 1000; i++ {
-		BenchmarkUsers[i] = User{"Name", "Lastname", 32}
+		BenchmarkUsers[i] = User{"Name", "Lastname", 32, true}
 	}
+
+	buf := &bytes.Buffer{}
+	coreTpl.Execute(buf, struct {
+		Header string
+		Users  []User
+	}{"<Header>", BenchmarkUsers})
+	//buf.WriteTo(os.Stdout)
+
 }
 
 func TestProcessTest(t *testing.T) {
 	buf := &bytes.Buffer{}
 	ProcessTest(buf, "<Header>", []User{
-		{"Ivan", "Sidorov", 20},
-		{"Petr", "Ivanov", 30},
-		{"James", "Bond", 40},
-		{"John", "Connor", 50},
-		{"Sara", "Connor", 60},
+		{"Ivan", "Sidorov", 20, true},
+		{"Petr", "Ivanov", 30, true},
+		{"James", "Bond", 40, true},
+		{"John", "Connor", 50, true},
+		{"Sara", "Connor", 60, false},
 	})
 
 	assert.Contains(t, buf.String(), "<h1>&lt;Header&gt;</h1>")
-	assert.Contains(t, buf.String(), "<p>James Bond: 40</p>")
+	assert.Regexp(t, `<p>\s*James Bond:\s*40\s*\(Man\)\s*</p>`, buf.String())
 
 	//buf.WriteTo(os.Stdout)
 }

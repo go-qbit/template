@@ -7,6 +7,7 @@ import (
 	"github.com/go-qbit/template"
 
 	"github.com/stretchr/testify/assert"
+	"fmt"
 )
 
 func TestTemplate_Parse(t *testing.T) {
@@ -19,5 +20,5 @@ func TestTemplate_Parse(t *testing.T) {
 	buf := &bytes.Buffer{}
 	tpl.WriteGo(buf, "test", "Test")
 
-	//fmt.Println(buf.String())
+	fmt.Println(buf.String())
 }

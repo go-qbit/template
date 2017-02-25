@@ -42,13 +42,12 @@ func (n *astWriteValue) WriteGo(w io.Writer, opts *GenGoOpts) {
 }
 
 type astWriteString struct {
-	value string
+	value iAstNode
 }
 
 func (n *astWriteString) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "io.WriteString(w, ")
-	s := &astString{n.value}
-	s.WriteGo(w, opts)
+	n.value.WriteGo(w, opts)
 	io.WriteString(w, ")\n")
 }
 
@@ -85,7 +84,19 @@ type astCondition struct {
 }
 
 func (n *astCondition) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "//<CONDITION>\n")
+	io.WriteString(w, "if ")
+	n.condition.WriteGo(w, opts)
+	io.WriteString(w, " {\n")
+	n.ifBody.WriteGo(w, opts)
+	io.WriteString(w, "}")
+
+	if n.elseBody != nil {
+		io.WriteString(w, " else {\n")
+		n.elseBody.WriteGo(w, opts)
+		io.WriteString(w, "}")
+	}
+
+	io.WriteString(w, "\n")
 }
 
 type astVariableDef struct {
@@ -122,7 +133,7 @@ func (n *astHeader) WriteGo(w io.Writer, opts *GenGoOpts) {
 }
 
 type astTemplate struct {
-	header, exprs iAstNode
+	header, body iAstNode
 }
 
 func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
@@ -132,8 +143,8 @@ func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
 		n.header.WriteGo(w, opts)
 	}
 
-	if n.exprs != nil {
-		n.exprs.WriteGo(w, opts)
+	if n.body != nil {
+		n.body.WriteGo(w, opts)
 	}
 
 	io.WriteString(w, "}\n")
@@ -145,14 +156,6 @@ type astImport struct {
 
 func (n *astImport) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, n.pkgName+"\n")
-}
-
-type astOutput struct {
-	value iAstNode
-}
-
-func (n *astOutput) WriteGo(w io.Writer, opts *GenGoOpts) {
-	n.value.WriteGo(w, opts)
 }
 
 type astFilter struct {

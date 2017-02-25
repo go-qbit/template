@@ -7,7 +7,10 @@
     <h1>[% header | HTML %]</h1>
     <hr>
     [% FOR user IN users %]
-        <p>[% user.Name | HTML %] [% user.Lastname | HTML %]: [% user.Age %]</p>
+        <p>
+            [% user.Name | HTML %] [% user.Lastname | HTML %]:
+            [% user.Age %] ([% IF user.IsMan %]Man[% ELSE %]Woman[% END %])
+        </p>
     [% END %]
 </<body>
 </html>
