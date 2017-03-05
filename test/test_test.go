@@ -1,4 +1,4 @@
-//go:generate go run ../ttgen/main.go -filename templates/index.gtt -out template.go -package test
+//go:generate go run ../ttgen/main.go -package templates templates/*.gtt
 
 package test
 
@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/go-qbit/template/test/templates"
 )
 
 const coreTemplate = `
@@ -38,7 +40,7 @@ const coreTemplate = `
 `
 
 var coreTpl *template.Template
-var BenchmarkUsers []User
+var BenchmarkUsers []templates.User
 
 func init() {
 	var err error
@@ -47,15 +49,15 @@ func init() {
 		panic(err)
 	}
 
-	BenchmarkUsers = make([]User, 1000)
+	BenchmarkUsers = make([]templates.User, 1000)
 	for i := 0; i < 1000; i++ {
-		BenchmarkUsers[i] = User{"Name", "Lastname", 32, true}
+		BenchmarkUsers[i] = templates.User{"Name", "Lastname", 32, true}
 	}
 
 	buf := &bytes.Buffer{}
 	coreTpl.Execute(buf, struct {
 		Header string
-		Users  []User
+		Users  []templates.User
 	}{"<Header>", BenchmarkUsers})
 	//buf.WriteTo(os.Stdout)
 
@@ -63,7 +65,7 @@ func init() {
 
 func TestProcessTest(t *testing.T) {
 	buf := &bytes.Buffer{}
-	ProcessTest(buf, "<Header>", []User{
+	templates.ProcessTest(buf, "<Header>", []templates.User{
 		{"Ivan", "Sidorov", 20, true},
 		{"Petr", "Ivanov", 30, true},
 		{"James", "Bond", 40, true},
@@ -81,7 +83,7 @@ func BenchmarkProcessTest(b *testing.B) {
 	buf := &bytes.Buffer{}
 	for i := 0; i < b.N; i++ {
 		buf.Reset()
-		ProcessTest(buf, "<Header>", BenchmarkUsers)
+		templates.ProcessTest(buf, "<Header>", BenchmarkUsers)
 	}
 }
 
@@ -91,7 +93,7 @@ func BenchmarkCoreTemplate(b *testing.B) {
 		buf.Reset()
 		coreTpl.Execute(buf, struct {
 			Header string
-			Users  []User
+			Users  []templates.User
 		}{"<Header>", BenchmarkUsers})
 	}
 }

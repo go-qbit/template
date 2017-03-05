@@ -1,4 +1,4 @@
-package test
+package templates
 
 type User struct {
 	Name     string

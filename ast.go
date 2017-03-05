@@ -12,7 +12,6 @@ type iAstNode interface {
 type GenGoOpts struct {
 	PackageName string
 	Imports     []string
-	TemplateId  string
 }
 
 type astList struct {

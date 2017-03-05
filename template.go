@@ -85,12 +85,11 @@ func (t *Template) ParseFile(filename string) error {
 	return t.Parse(string(data))
 }
 
-func (t *Template) WriteGo(w io.Writer, packageName, templateId string) {
+func (t *Template) WriteGo(w io.Writer, packageName string) {
 	buf := &bytes.Buffer{}
 
 	t.astTree.WriteGo(buf, &GenGoOpts{
 		PackageName: packageName,
-		TemplateId:  templateId,
 	})
 
 	source, err := format.Source(buf.Bytes())

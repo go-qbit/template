@@ -4,34 +4,41 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/go-qbit/template"
 )
 
 func main() {
-	fileName := flag.String("filename", "", "Path to template")
-	outFileName := flag.String("out", "template.go", "Write to file")
 	pkgName := flag.String("package", "template", "Package name")
-
 	flag.Parse()
-	if *fileName == "" {
-		fmt.Println("-filename is missed")
-		os.Exit(1)
-	}
 
+	for _, pattern := range flag.Args() {
+		filesNames, err := filepath.Glob(pattern)
+		if err != nil {
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+		for _, fileName := range filesNames {
+			genFromFile(fileName, *pkgName)
+		}
+	}
+}
+
+func genFromFile(fileName, pkgName string) {
 	t := template.New()
-	err := t.ParseFile(*fileName)
+	err := t.ParseFile(fileName)
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 
-	out, err := os.Create(*outFileName)
+	out, err := os.Create(fileName + ".go")
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 	defer out.Close()
 
-	t.WriteGo(out, *pkgName, "Test")
+	t.WriteGo(out, pkgName)
 }
