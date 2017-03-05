@@ -1,9 +1,16 @@
-[%
-    VARS (header string, users []User)
-%]
-<!DOCTYPE html>
-<html>
-<body>
+[% WRAPPER page(caption string) %]
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>[% caption | HTML %]</title>
+    </head>
+    <body>
+        [% <CONTENT> %]
+    </<body>
+    </html>
+[% END %]
+
+[% TEMPLATE Test(header string, users []User) USE WRAPPER page(header) %]
     <h1>[% header | HTML %]</h1>
     <hr>
     [% FOR user IN users %]
@@ -12,5 +19,4 @@
             [% user.Age %] ([% IF user.IsMan %]Man[% ELSE %]Woman[% END %])
         </p>
     [% END %]
-</<body>
-</html>
+[% END %]

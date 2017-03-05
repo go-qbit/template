@@ -59,7 +59,7 @@ func (t *Template) Parse(text string) error {
 		}
 	}
 
-	//println(buf.String())
+	//fmt.Println(buf.String())
 
 	lexer := &exprLex{text: buf.String()}
 	yyErrorVerbose = true

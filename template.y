@@ -7,9 +7,11 @@ import (
 %}
 
 %union {
-    string      string
-	iAstNode    iAstNode
-	astFilter   *astFilter
+    string          string
+	iAstNode        iAstNode
+	astList         *astList
+	astUseWrapper   *astUseWrapper
+	astFilter       *astFilter
 }
 
 %token  IDENTIFIER
@@ -21,31 +23,53 @@ import (
 %token  ELSE
 %token  END
 %token  VARS
+%token  TEMPLATE
 %token  IMPORT
+%token  WRAPPER
+%token  USE
+%token  CONTENT_MARKER
 
-%type   <string>    STRING IDENTIFIER NUMBER var_type
-%type	<iAstNode>  top template header imports import_list vars var_list var body body_stmt expr loop condition
-%type   <astFilter> filter
+%type   <string>        STRING IDENTIFIER NUMBER var_type
+%type	<iAstNode>      top file header macros_stmt var body_stmt expr loop condition
+%type   <astList>       imports import_list macroses param_list var_list body
+%type   <astUseWrapper> use_wrapper
+%type   <astFilter>     filter
 
 %%
 
-top:        template                    { yylex.(*exprLex).result = $$  }
+top:        file                        { yylex.(*exprLex).result = $$  }
 
-template:   header body                 { $$ = &astTemplate{$1, $2} }
+file:       header macroses             { $$ = &astFile{$1, $2} }
 
-header:     imports vars                { $$ = &astHeader{$1, $2} }
+header:                                 { $$ = nil }
+        |   imports                     { $$ = &astHeader{$1} }
 
-imports:                                { $$ = nil }
-        | IMPORT '(' import_list ')' ';'{ $$ = $3 }
+imports:    IMPORT '(' import_list ')' ';'
+                                        { $$ = $3 }
 
 import_list: STRING                     { $$ = &astList{[]iAstNode{&astImport{$1}}} }
-        | import_list ',' STRING        { $$.(*astList).children = append($$.(*astList).children, &astImport{$3}) }
+        |   import_list ',' STRING      { $$.Add(&astImport{$3}) }
 
-vars:                                   { $$ = nil }
-        | VARS '(' var_list ')' ';'     { $$ = $3 }
+macroses:   macros_stmt                 { $$ = &astList{[]iAstNode{$1}} }
+        |   macroses ';' macros_stmt    { $$.Add($3) }
+
+macros_stmt:                            { $$ = nil }
+        |   TEMPLATE IDENTIFIER '(' var_list ')' use_wrapper ';' body ';' END
+                                        { $$ = &astTemplate{$2, $4, $6, $8} }
+        |   WRAPPER IDENTIFIER '(' var_list ')' ';' body ';' END
+                                        { $$ = &astWrapper{$2, $4, $7} }
+        |   STRING                      { $$ = nil }
+
+use_wrapper:                            { $$ = nil }
+        |   USE WRAPPER IDENTIFIER '(' param_list ')'
+                                        { $$ = &astUseWrapper{$3, $5} }
+
+param_list:                             { $$ = nil }
+        |   expr                        { $$ = &astList{[]iAstNode{$1}} }
+        |   param_list ',' expr         { $$.Add($3) }
 
 var_list:   var                         { $$ = &astList{[]iAstNode{$1}} }
-        |   var_list ',' var            { $$.(*astList).children = append($$.(*astList).children, $3) }
+        |   var_list ',' var            { $$.Add($3) }
 
 var:                                    { $$ = nil }
         |   IDENTIFIER var_type         { $$ = &astVariableDef{$1, $2} }
@@ -54,7 +78,7 @@ var_type:   IDENTIFIER                  { $$ = $1 }
         |   '[' ']' IDENTIFIER          { $$ = "[]" + $3 }
 
 body:       body_stmt                   { $$ = &astList{[]iAstNode{$1}} }
-        |   body ';' body_stmt          { $$.(*astList).children = append($$.(*astList).children, $3) }
+        |   body ';' body_stmt          { $$.Add($3) }
 
 body_stmt:                              { $$ = nil }
         |   STRING                      { $$ = &astWriteString{&astString{$1}} }
@@ -63,6 +87,7 @@ body_stmt:                              { $$ = nil }
         |   STRING '|' filter           { $3.value = &astString{$1}; $$ = &astWriteString{$3} }
         |   loop                        { $$ = $1 }
         |   condition                   { $$ = $1 }
+        |   CONTENT_MARKER              { $$ = &astWriteContent{} }
 
 
 expr:       IDENTIFIER                  { $$ = &astValue{$1} }

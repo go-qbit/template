@@ -10,9 +10,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const coreTemplate = `<!DOCTYPE html>
-<html>
-<body>
+const coreTemplate = `
+{{define "header"}}
+	<!DOCTYPE html>
+	<html>
+	<head>
+        <title>{{ . }}</title>
+    </head>
+	<body>
+{{ end }}
+
+{{define "footer"}}
+	</body>
+	</html>
+{{ end }}
+
+	{{template "header" .Header}}
     <h1>{{ .Header }}</h1>
     <hr>
     {{range .Users }}
@@ -21,8 +34,7 @@ const coreTemplate = `<!DOCTYPE html>
         	{{ .Age }} ({{if .IsMan }}Man{{else}}Woman{{end}})
         </p>
     {{ end }}
-</body>
-</html>
+    {{template "footer"}}
 `
 
 var coreTpl *template.Template

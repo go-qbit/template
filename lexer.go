@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var yyLexDebug = false
+var yyLexDebug = false //|| true
 
 type exprLex struct {
 	text   string
@@ -31,13 +31,17 @@ type compiledReToken struct {
 }
 
 var simpleTokens = []simpleToken{
+	{"<CONTENT>", CONTENT_MARKER},
+	{"TEMPLATE", TEMPLATE},
+	{"WRAPPER", WRAPPER},
+	{"IMPORT", IMPORT},
+	{"VARS", VARS},
+	{"ELSE", ELSE},
+	{"FOR", FOR},
+	{"END", END},
+	{"USE", USE},
 	{"IF", IF},
 	{"IN", IN},
-	{"FOR", FOR},
-	{"ELSE", ELSE},
-	{"END", END},
-	{"VARS", VARS},
-	{"IMPORT", IMPORT},
 }
 
 var reTokens = []reToken{
