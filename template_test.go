@@ -18,7 +18,7 @@ func TestTemplate_Parse(t *testing.T) {
 	}
 
 	buf := &bytes.Buffer{}
-	tpl.WriteGo(buf, "test", "Test")
+	tpl.WriteGo(buf, "test")
 
 	fmt.Println(buf.String())
 }

@@ -15,8 +15,10 @@
     <hr>
     [% FOR user IN users %]
         <p>
-            [% user.Name | HTML %] [% user.Lastname | HTML %]:
+            [% PROCESS UserName(user) %]:
             [% user.Age %] ([% IF user.IsMan %]Man[% ELSE %]Woman[% END %])
         </p>
     [% END %]
 [% END %]
+
+[% TEMPLATE UserName(user User) %][% user.Name | HTML %] [% user.Lastname | HTML %][% END %]

@@ -234,3 +234,17 @@ func (n *astCondition) WriteGo(w io.Writer, opts *GenGoOpts) {
 
 	io.WriteString(w, "\n")
 }
+
+type astProcessTemplate struct {
+	name   string
+	params *astList
+}
+
+func (n *astProcessTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
+	io.WriteString(w, "Process" + n.name + "(w")
+	for _, param := range n.params.children {
+		io.WriteString(w, ", ")
+		param.WriteGo(w, opts)
+	}
+	io.WriteString(w, ")\n")
+}

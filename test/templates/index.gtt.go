@@ -21,9 +21,7 @@ func ProcessTest(w io.Writer, header string, users []User) {
 		io.WriteString(w, "</h1>\n    <hr>\n    ")
 		for _, user := range users {
 			io.WriteString(w, "\n        <p>\n            ")
-			io.WriteString(w, filter.HTML(user.Name))
-			io.WriteString(w, " ")
-			io.WriteString(w, filter.HTML(user.Lastname))
+			ProcessUserName(w, user)
 			io.WriteString(w, ":\n            ")
 			io.WriteString(w, fmt.Sprint(user.Age))
 			io.WriteString(w, " (")
@@ -36,4 +34,10 @@ func ProcessTest(w io.Writer, header string, users []User) {
 		}
 		io.WriteString(w, "\n")
 	}, header)
+}
+
+func ProcessUserName(w io.Writer, user User) {
+	io.WriteString(w, filter.HTML(user.Name))
+	io.WriteString(w, " ")
+	io.WriteString(w, filter.HTML(user.Lastname))
 }

@@ -28,6 +28,7 @@ import (
 %token  WRAPPER
 %token  USE
 %token  CONTENT_MARKER
+%token  PROCESS
 
 %type   <string>        STRING IDENTIFIER NUMBER var_type
 %type	<iAstNode>      top file header macros_stmt var body_stmt expr loop condition
@@ -88,6 +89,8 @@ body_stmt:                              { $$ = nil }
         |   loop                        { $$ = $1 }
         |   condition                   { $$ = $1 }
         |   CONTENT_MARKER              { $$ = &astWriteContent{} }
+        |   PROCESS IDENTIFIER '(' param_list ')'
+                                        { $$ = &astProcessTemplate{$2, $4} }
 
 
 expr:       IDENTIFIER                  { $$ = &astValue{$1} }

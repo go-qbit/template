@@ -22,17 +22,16 @@ const coreTemplate = `
 	<body>
 {{ end }}
 
-{{define "footer"}}
-	</body>
-	</html>
-{{ end }}
+{{define "footer"}}{{ .Name }} {{ .Lastname }}{{ end }}
+
+{{define "UserName"}}{{ .Name }} {{ .Lastname }}{{ end }}
 
 	{{template "header" .Header}}
     <h1>{{ .Header }}</h1>
     <hr>
     {{range .Users }}
         <p>
-        	{{ .Name }} {{ .Lastname }}:
+        	{{template "UserName" .}}:
         	{{ .Age }} ({{if .IsMan }}Man{{else}}Woman{{end}})
         </p>
     {{ end }}
