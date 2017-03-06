@@ -22,3 +22,9 @@
 [% END %]
 
 [% TEMPLATE UserName(user User) %][% user.Name | HTML %] [% user.Lastname | HTML %][% END %]
+
+[% TEMPLATE TestExprSyntax(i int, b bool, s string) %]
+    [% IF i > 0 OR i < 100 AND !b || i <= 200 && i >= 150 || !(i == 0 && !b) %]
+        [% len(s) %]
+    [% END %]
+[% END %]

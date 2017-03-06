@@ -29,12 +29,16 @@ import (
 %token  USE
 %token  CONTENT_MARKER
 %token  PROCESS
+%token  EQ NE GE LE OR AND NOT
 
 %type   <string>        STRING IDENTIFIER NUMBER var_type
 %type	<iAstNode>      top file header macros_stmt var body_stmt expr loop condition
 %type   <astList>       imports import_list macroses param_list var_list body
 %type   <astUseWrapper> use_wrapper
 %type   <astFilter>     filter
+
+%left '>' '<' EQ NE GE LE OR AND
+%left NOT
 
 %%
 
@@ -82,19 +86,31 @@ body:       body_stmt                   { $$ = &astList{[]iAstNode{$1}} }
         |   body ';' body_stmt          { $$.Add($3) }
 
 body_stmt:                              { $$ = nil }
-        |   STRING                      { $$ = &astWriteString{&astString{$1}} }
-        |   IDENTIFIER                  { $$ = &astWriteValue{&astValue{$1}} }
-        |   IDENTIFIER '|' filter       { $3.value = &astValue{$1}; $$ = &astWriteString{$3} }
-        |   STRING '|' filter           { $3.value = &astString{$1}; $$ = &astWriteString{$3} }
+        |   expr                        { $$ = &astWriteValue{$1} }
         |   loop                        { $$ = $1 }
         |   condition                   { $$ = $1 }
         |   CONTENT_MARKER              { $$ = &astWriteContent{} }
         |   PROCESS IDENTIFIER '(' param_list ')'
                                         { $$ = &astProcessTemplate{$2, $4} }
+        | expr '|' filter               { $3.value = $1; $$ = &astWriteString{$3} }
 
 
-expr:       IDENTIFIER                  { $$ = &astValue{$1} }
+expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }
+        |   expr '<' expr               { $$ = &astExpr{"<", $1, $3} }
+        |   expr EQ expr                { $$ = &astExpr{"==", $1, $3} }
+        |   expr NE expr                { $$ = &astExpr{"!=", $1, $3} }
+        |   expr GE expr                { $$ = &astExpr{">=", $1, $3} }
+        |   expr LE expr                { $$ = &astExpr{"<=", $1, $3} }
+        |   expr OR expr                { $$ = &astExpr{"||", $1, $3} }
+        |   expr AND expr               { $$ = &astExpr{"&&", $1, $3} }
+        |   NOT expr                    { $$ = &astExpr{"!", nil, $2} }
+        |   '(' expr ')'                { $$ = &astParenthesis{$2} }
+        |   IDENTIFIER '(' param_list ')'
+                                        { $$ = &astFunc{$1, $3} }
+        |   IDENTIFIER                  { $$ = &astValue{$1} }
         |   STRING                      { $$ = &astString{$1} }
+        |   NUMBER                      { $$ = &astValue{$1} }
+
 
 filter:     IDENTIFIER                  { $$ = &astFilter{name: $1} }
         |   IDENTIFIER '(' ')'          { $$ = &astFilter{name: $1} }

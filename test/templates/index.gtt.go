@@ -41,3 +41,13 @@ func ProcessUserName(w io.Writer, user User) {
 	io.WriteString(w, " ")
 	io.WriteString(w, filter.HTML(user.Lastname))
 }
+
+func ProcessTestExprSyntax(w io.Writer, i int, b bool, s string) {
+	io.WriteString(w, "\n    ")
+	if i > 0 || i < 100 && !b || i <= 200 && i >= 150 || !(i == 0 && !b) {
+		io.WriteString(w, "\n        ")
+		io.WriteString(w, fmt.Sprint(len(s)))
+		io.WriteString(w, "\n    ")
+	}
+	io.WriteString(w, "\n")
+}

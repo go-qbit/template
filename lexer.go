@@ -1,7 +1,6 @@
 package template
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -10,9 +9,10 @@ import (
 var yyLexDebug = false //|| true
 
 type exprLex struct {
-	text   string
-	err    error
-	result iAstNode
+	text    string
+	curLine int
+	err     error
+	result  iAstNode
 }
 
 type simpleToken struct {
@@ -41,14 +41,24 @@ var simpleTokens = []simpleToken{
 	{"FOR", FOR},
 	{"END", END},
 	{"USE", USE},
+	{"NOT", NOT},
+	{"AND", AND},
+	{"OR", OR},
 	{"IF", IF},
 	{"IN", IN},
+	{"==", EQ},
+	{"!=", NE},
+	{">=", GE},
+	{"<=", LE},
+	{"&&", AND},
+	{"||", OR},
+	{"!", NOT},
 }
 
 var reTokens = []reToken{
 	{`^(?:\")(?:[^\\\"]*(?:\\.[^\\\"]*)*)(?:\")`, STRING},
 	{`^-?\d+(?:[.,]\d+)?`, NUMBER},
-	{`^\*?[a-zA-Z_][a-zA-Z0-9\._]+`, IDENTIFIER},
+	{`^\*?[a-zA-Z_][a-zA-Z0-9\._]*`, IDENTIFIER},
 }
 
 var compiledReTokens = getCompiledReTokens()
@@ -90,6 +100,8 @@ func (x *exprLex) Lex(yylval *yySymType) int {
 				x.text = x.text[len(m):]
 				yylval.string = string(m)
 
+				x.curLine += strings.Count(yylval.string, "\n")
+
 				if yyLexDebug {
 					fmt.Println("TOKEN ", tokenName(token.value), yylval.string)
 				}
@@ -102,7 +114,10 @@ func (x *exprLex) Lex(yylval *yySymType) int {
 		x.text = x.text[1:]
 
 		switch c {
-		case ' ', '\t', '\n', '\r':
+		case '\n':
+			x.curLine++
+			continue
+		case ' ', '\t', '\r':
 			continue
 		default:
 			if yyLexDebug {
@@ -116,7 +131,7 @@ func (x *exprLex) Lex(yylval *yySymType) int {
 }
 
 func (x *exprLex) Error(s string) {
-	x.err = errors.New(s)
+	x.err = fmt.Errorf("%s at line %d", s, x.curLine+1)
 }
 
 func tokenName(c int) string {

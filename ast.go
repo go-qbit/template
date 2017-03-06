@@ -157,9 +157,16 @@ type astWriteValue struct {
 }
 
 func (n *astWriteValue) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "io.WriteString(w, fmt.Sprint(")
-	n.value.WriteGo(w, opts)
-	io.WriteString(w, "))\n")
+	switch n.value.(type) {
+	case *astString:
+		io.WriteString(w, "io.WriteString(w, ")
+		n.value.WriteGo(w, opts)
+		io.WriteString(w, ")\n")
+	default:
+		io.WriteString(w, "io.WriteString(w, fmt.Sprint(")
+		n.value.WriteGo(w, opts)
+		io.WriteString(w, "))\n")
+	}
 }
 
 type astWriteString struct {
@@ -186,6 +193,45 @@ type astValue struct {
 
 func (n *astValue) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, n.name)
+}
+
+type astExpr struct {
+	operator           string
+	operand1, operand2 iAstNode
+}
+
+func (n *astExpr) WriteGo(w io.Writer, opts *GenGoOpts) {
+	if n.operand1 != nil {
+		n.operand1.WriteGo(w, opts)
+	}
+	io.WriteString(w, n.operator)
+	n.operand2.WriteGo(w, opts)
+}
+
+type astParenthesis struct {
+	expr iAstNode
+}
+
+func (n *astParenthesis) WriteGo(w io.Writer, opts *GenGoOpts) {
+	io.WriteString(w, "(")
+	n.expr.WriteGo(w, opts)
+	io.WriteString(w, ")")
+}
+
+type astFunc struct {
+	name   string
+	params *astList
+}
+
+func (n *astFunc) WriteGo(w io.Writer, opts *GenGoOpts) {
+	io.WriteString(w, n.name+"(")
+	for i, param := range n.params.children {
+		if i > 0 {
+			io.WriteString(w, ", ")
+		}
+		param.WriteGo(w, opts)
+	}
+	io.WriteString(w, ")")
 }
 
 type astFilter struct {
@@ -241,7 +287,7 @@ type astProcessTemplate struct {
 }
 
 func (n *astProcessTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "Process" + n.name + "(w")
+	io.WriteString(w, "Process"+n.name+"(w")
 	for _, param := range n.params.children {
 		io.WriteString(w, ", ")
 		param.WriteGo(w, opts)

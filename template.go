@@ -4,6 +4,7 @@ package template
 
 import (
 	"bytes"
+	"fmt"
 	"go/format"
 	"io"
 	"io/ioutil"
@@ -79,7 +80,7 @@ func (t *Template) Parse(text string) error {
 func (t *Template) ParseFile(filename string) error {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s: %s", filename, err.Error())
 	}
 
 	return t.Parse(string(data))
