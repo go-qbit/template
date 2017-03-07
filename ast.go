@@ -88,7 +88,7 @@ func (n *astHeader) WriteGo(w io.Writer, opts *GenGoOpts) {
 	if n.imports != nil {
 		for _, child := range n.imports.children {
 			if child != nil {
-				importsMap[strings.Trim(child.(*astString).value, `"`)] = struct{}{}
+				importsMap[strings.Trim(child.(*astImport).pkgName, `"`)] = struct{}{}
 			}
 		}
 	}
