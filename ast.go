@@ -2,10 +2,12 @@ package template
 
 import (
 	"io"
+	"sort"
 	"strings"
 )
 
 type iAstNode interface {
+	GetImports() []string
 	WriteGo(io.Writer, *GenGoOpts)
 }
 
@@ -16,6 +18,17 @@ type GenGoOpts struct {
 
 type astList struct {
 	children []iAstNode
+}
+
+func (n *astList) GetImports() []string {
+	res := []string{}
+	for _, child := range n.children {
+		if child != nil {
+			res = append(res, child.GetImports()...)
+		}
+	}
+
+	return res
 }
 
 func (n *astList) WriteGo(w io.Writer, opts *GenGoOpts) {
@@ -34,12 +47,23 @@ type astFile struct {
 	header, macroses iAstNode
 }
 
+func (n *astFile) GetImports() []string {
+	res := []string{}
+	if n.macroses != nil {
+		res = append(res, n.macroses.GetImports()...)
+	}
+
+	return res
+}
+
 func (n *astFile) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "package "+opts.PackageName+"\n")
 
 	if n.header == nil {
 		n.header = &astHeader{}
 	}
+
+	opts.Imports = append(opts.Imports, n.GetImports()...)
 
 	n.header.WriteGo(w, opts)
 
@@ -52,15 +76,32 @@ type astHeader struct {
 	imports *astList
 }
 
+func (*astHeader) GetImports() []string { return []string{} }
+
 func (n *astHeader) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "import (\n")
-	io.WriteString(w, "\"fmt\"\n")
-	io.WriteString(w, "\"io\"\n")
-	io.WriteString(w, "\"github.com/go-qbit/template/filter\"\n")
+	importsMap := make(map[string]struct{}, len(opts.Imports))
+
+	for _, name := range opts.Imports {
+		importsMap[name] = struct{}{}
+	}
+
 	if n.imports != nil {
-		for _, pkgName := range n.imports.children {
-			pkgName.WriteGo(w, opts)
+		for _, child := range n.imports.children {
+			if child != nil {
+				importsMap[strings.Trim(child.(*astString).value, `"`)] = struct{}{}
+			}
 		}
+	}
+
+	imports := make([]string, 0, len(importsMap))
+	for name, _ := range importsMap {
+		imports = append(imports, name)
+	}
+	sort.Strings(imports)
+
+	io.WriteString(w, "import (\n")
+	for _, name := range imports {
+		io.WriteString(w, `"`+name+`"`+"\n")
 	}
 	io.WriteString(w, ")\n")
 }
@@ -68,6 +109,8 @@ func (n *astHeader) WriteGo(w io.Writer, opts *GenGoOpts) {
 type astImport struct {
 	pkgName string
 }
+
+func (*astImport) GetImports() []string { return []string{} }
 
 func (n *astImport) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, n.pkgName+"\n")
@@ -78,6 +121,15 @@ type astTemplate struct {
 	vars    *astList
 	wrapper *astUseWrapper
 	body    *astList
+}
+
+func (n *astTemplate) GetImports() []string {
+	res := []string{}
+	if n.body != nil {
+		res = append(res, n.body.GetImports()...)
+	}
+
+	return res
 }
 
 func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
@@ -115,12 +167,22 @@ type astUseWrapper struct {
 	params *astList
 }
 
+func (*astUseWrapper) GetImports() []string                   { return []string{} }
 func (n *astUseWrapper) WriteGo(w io.Writer, opts *GenGoOpts) {}
 
 type astWrapper struct {
 	name string
 	vars *astList
 	body iAstNode
+}
+
+func (n *astWrapper) GetImports() []string {
+	res := []string{}
+	if n.body != nil {
+		res = append(res, n.body.GetImports()...)
+	}
+
+	return res
 }
 
 func (n *astWrapper) WriteGo(w io.Writer, opts *GenGoOpts) {
@@ -140,6 +202,7 @@ func (n *astWrapper) WriteGo(w io.Writer, opts *GenGoOpts) {
 
 type astWriteContent struct{}
 
+func (*astWriteContent) GetImports() []string { return []string{} }
 func (n *astWriteContent) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "tplClbF()\n")
 }
@@ -148,6 +211,7 @@ type astVariableDef struct {
 	vName, vType string
 }
 
+func (*astVariableDef) GetImports() []string { return []string{} }
 func (n *astVariableDef) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, n.vName+" "+n.vType)
 }
@@ -156,6 +220,15 @@ type astWriteValue struct {
 	value iAstNode
 }
 
+func (n *astWriteValue) GetImports() []string {
+	res := append([]string{"io"}, n.value.GetImports()...)
+
+	if _, ok := n.value.(*astString); !ok {
+		res = append(res, "fmt")
+	}
+
+	return res
+}
 func (n *astWriteValue) WriteGo(w io.Writer, opts *GenGoOpts) {
 	switch n.value.(type) {
 	case *astString:
@@ -173,6 +246,7 @@ type astWriteString struct {
 	value iAstNode
 }
 
+func (n *astWriteString) GetImports() []string { return append([]string{"io"}, n.value.GetImports()...) }
 func (n *astWriteString) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "io.WriteString(w, ")
 	n.value.WriteGo(w, opts)
@@ -183,6 +257,7 @@ type astString struct {
 	value string
 }
 
+func (*astString) GetImports() []string { return []string{} }
 func (n *astString) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, strings.Replace(n.value, "\n", `\n`, -1))
 }
@@ -191,6 +266,7 @@ type astValue struct {
 	name string
 }
 
+func (*astValue) GetImports() []string { return []string{} }
 func (n *astValue) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, n.name)
 }
@@ -200,6 +276,13 @@ type astExpr struct {
 	operand1, operand2 iAstNode
 }
 
+func (n *astExpr) GetImports() []string {
+	if n.operand1 != nil {
+		return append(n.operand1.GetImports(), n.operand2.GetImports()...)
+	} else {
+		return n.operand2.GetImports()
+	}
+}
 func (n *astExpr) WriteGo(w io.Writer, opts *GenGoOpts) {
 	if n.operand1 != nil {
 		n.operand1.WriteGo(w, opts)
@@ -212,6 +295,7 @@ type astParenthesis struct {
 	expr iAstNode
 }
 
+func (n *astParenthesis) GetImports() []string { return n.expr.GetImports() }
 func (n *astParenthesis) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "(")
 	n.expr.WriteGo(w, opts)
@@ -223,6 +307,7 @@ type astFunc struct {
 	params *astList
 }
 
+func (*astFunc) GetImports() []string { return []string{} }
 func (n *astFunc) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, n.name+"(")
 	for i, param := range n.params.children {
@@ -239,6 +324,9 @@ type astFilter struct {
 	value iAstNode
 }
 
+func (n *astFilter) GetImports() []string {
+	return append([]string{"github.com/go-qbit/template/filter"}, n.value.GetImports()...)
+}
 func (n *astFilter) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "filter."+n.name+"(")
 	n.value.WriteGo(w, opts)
@@ -251,6 +339,19 @@ type astLoop struct {
 	body          iAstNode
 }
 
+func (n *astLoop) GetImports() []string {
+	res := []string{}
+
+	if n.loopVariable != nil {
+		res = append(res, n.loopVariable.GetImports()...)
+	}
+
+	if n.body != nil {
+		res = append(res, n.body.GetImports()...)
+	}
+
+	return res
+}
 func (n *astLoop) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "for _, "+n.localVariable+":= range ")
 	n.loopVariable.WriteGo(w, opts)
@@ -265,6 +366,24 @@ type astCondition struct {
 	elseBody  iAstNode
 }
 
+func (n *astCondition) GetImports() []string {
+	res := []string{}
+
+	if n.condition != nil {
+		res = append(res, n.condition.GetImports()...)
+	}
+
+	if n.ifBody != nil {
+		res = append(res, n.ifBody.GetImports()...)
+	}
+
+	if n.elseBody != nil {
+		res = append(res, n.elseBody.GetImports()...)
+	}
+
+	return res
+
+}
 func (n *astCondition) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "if ")
 	n.condition.WriteGo(w, opts)
@@ -286,6 +405,7 @@ type astProcessTemplate struct {
 	params *astList
 }
 
+func (*astProcessTemplate) GetImports() []string { return []string{} }
 func (n *astProcessTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "Process"+n.name+"(w")
 	for _, param := range n.params.children {
