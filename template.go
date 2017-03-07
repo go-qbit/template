@@ -8,10 +8,13 @@ import (
 	"go/format"
 	"io"
 	"io/ioutil"
+	"regexp"
 	"strings"
 
 	"github.com/go-qbit/qerror"
 )
+
+var trimRe = regexp.MustCompile(`(?s:^(\s*)(.*?)(\s*)$)`)
 
 type Template struct {
 	astTree iAstNode
@@ -37,7 +40,15 @@ func (t *Template) Parse(text string) error {
 
 			inBlock = false
 
-			buf.WriteString(text[pos : pos+newPos])
+			from := pos
+			to := pos + newPos
+			if text[pos] == '+' {
+				from++
+			}
+			if pos+newPos-1 > 0 && text[pos+newPos-1] == '+' {
+				to--
+			}
+			buf.WriteString(text[from:to])
 			buf.WriteByte(';')
 
 			pos += newPos + 2
@@ -45,15 +56,39 @@ func (t *Template) Parse(text string) error {
 			newPos := strings.Index(text[pos:], "[%")
 
 			if newPos < 0 {
-				buf.WriteString(strQuote(text[pos:]))
-				buf.WriteByte(';')
+				parts := trimRe.FindStringSubmatch(text[pos:])
+				buf.WriteString(parts[1])
+				if len(parts[2]) > 0 {
+					buf.WriteString(strQuote(parts[2]))
+				}
+				buf.WriteString(parts[3])
+				if len(parts[2]) > 0 {
+					buf.WriteByte(';')
+				}
 				break
 			}
 
 			inBlock = true
 			if newPos != 0 {
-				buf.WriteString(strQuote(text[pos : pos+newPos]))
-				buf.WriteByte(';')
+				parts := trimRe.FindStringSubmatch(text[pos : pos+newPos])
+				if pos-3 > 0 && text[pos-3] == '+' {
+					parts[2] = parts[1] + parts[2]
+					parts[1] = ""
+				}
+
+				if pos+newPos+2 < len(text) && text[pos+newPos+2] == '+' {
+					parts[2] = parts[2] + parts[3]
+					parts[3] = ""
+				}
+
+				buf.WriteString(parts[1])
+				if len(parts[2]) > 0 {
+					buf.WriteString(strQuote(parts[2]))
+				}
+				buf.WriteString(parts[3])
+				if len(parts[2]) > 0 {
+					buf.WriteByte(';')
+				}
 			}
 
 			pos += newPos + 2

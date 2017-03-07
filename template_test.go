@@ -4,10 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/go-qbit/template"
-
 	"github.com/stretchr/testify/assert"
-	"fmt"
+
+	"github.com/go-qbit/template"
 )
 
 func TestTemplate_Parse(t *testing.T) {
@@ -20,5 +19,9 @@ func TestTemplate_Parse(t *testing.T) {
 	buf := &bytes.Buffer{}
 	tpl.WriteGo(buf, "test")
 
-	fmt.Println(buf.String())
+	assert.Contains(t, buf.String(), `"   spaces  "`)
+	assert.Contains(t, buf.String(), `"rspaces  "`)
+	assert.Contains(t, buf.String(), `"   lspaces"`)
+
+	//fmt.Println(buf.String())
 }
