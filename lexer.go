@@ -58,7 +58,7 @@ var simpleTokens = []simpleToken{
 var reTokens = []reToken{
 	{`^(?:\")(?:[^\\\"]*(?:\\.[^\\\"]*)*)(?:\")`, STRING},
 	{`^-?\d+(?:[.,]\d+)?`, NUMBER},
-	{`^\*?[a-zA-Z_][a-zA-Z0-9\._]*`, IDENTIFIER},
+	{`^[a-zA-Z_][a-zA-Z0-9\_]*`, IDENTIFIER},
 }
 
 var compiledReTokens = getCompiledReTokens()

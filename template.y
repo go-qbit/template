@@ -31,13 +31,13 @@ import (
 %token  PROCESS
 %token  EQ NE GE LE OR AND NOT
 
-%type   <string>        STRING IDENTIFIER NUMBER var_type
+%type   <string>        STRING IDENTIFIER NUMBER var_type var_value
 %type	<iAstNode>      top file header macros_stmt var body_stmt expr loop condition
 %type   <astList>       imports import_list macroses param_list var_list body
 %type   <astUseWrapper> use_wrapper
 %type   <astFilter>     filter
 
-%left '>' '<' EQ NE GE LE OR AND
+%left '+' '-' '*' '/' '>' '<' EQ NE GE LE OR AND
 %left NOT
 
 %%
@@ -81,6 +81,7 @@ var:                                    { $$ = nil }
 
 var_type:   IDENTIFIER                  { $$ = $1 }
         |   '[' ']' IDENTIFIER          { $$ = "[]" + $3 }
+        |   '*' IDENTIFIER              { $$ = "*" + $2 }
 
 body:       body_stmt                   { $$ = &astList{[]iAstNode{$1}} }
         |   body ';' body_stmt          { $$.Add($3) }
@@ -97,6 +98,10 @@ body_stmt:                              { $$ = nil }
 
 expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }
         |   expr '<' expr               { $$ = &astExpr{"<", $1, $3} }
+        |   expr '+' expr               { $$ = &astExpr{"+", $1, $3} }
+        |   expr '-' expr               { $$ = &astExpr{"-", $1, $3} }
+        |   expr '*' expr               { $$ = &astExpr{"*", $1, $3} }
+        |   expr '/' expr               { $$ = &astExpr{"/", $1, $3} }
         |   expr EQ expr                { $$ = &astExpr{"==", $1, $3} }
         |   expr NE expr                { $$ = &astExpr{"!=", $1, $3} }
         |   expr GE expr                { $$ = &astExpr{">=", $1, $3} }
@@ -107,11 +112,16 @@ expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }
         |   '(' expr ')'                { $$ = &astParenthesis{$2} }
         |   IDENTIFIER '(' param_list ')'
                                         { $$ = &astFunc{$1, $3} }
-        |   IDENTIFIER '[' NUMBER ']'   { $$ = &astValue{$1 + "[" + $3 + "]"} }
-        |   IDENTIFIER '[' STRING ']'   { $$ = &astValue{$1 + "[" + $3 + "]"} }
-        |   IDENTIFIER                  { $$ = &astValue{$1} }
+        |   var_value                   { $$ = &astValue{$1} }
         |   STRING                      { $$ = &astString{$1} }
         |   NUMBER                      { $$ = &astValue{$1} }
+
+var_value:  var_value '.' IDENTIFIER    { $$ = $1 + "." + $3 }
+        |   var_value '[' NUMBER ']'    { $$ = $1 + "[" + $3 + "]" }
+        |   var_value '[' STRING ']'    { $$ = $1 + "[" + $3 + "]" }
+        |   '*' '(' var_value ')'       { $$ = "*(" + $3 + ")" }
+        //ToDo:|   '*' var_value               { $$ = "*" + $2 }
+        |   IDENTIFIER                  { $$ = $1 }
 
 
 filter:     IDENTIFIER                  { $$ = &astFilter{name: $1} }
