@@ -37,7 +37,7 @@ import (
 %type   <astUseWrapper> use_wrapper
 %type   <astFilter>     filter
 
-%left '+' '-' '*' '/' '>' '<' EQ NE GE LE OR AND
+%left '+' '-' '*' '/' '%' '>' '<' EQ NE GE LE OR AND
 %left NOT
 
 %%
@@ -105,6 +105,7 @@ expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }
         |   expr '-' expr               { $$ = &astExpr{"-", $1, $3} }
         |   expr '*' expr               { $$ = &astExpr{"*", $1, $3} }
         |   expr '/' expr               { $$ = &astExpr{"/", $1, $3} }
+        |   expr '%' expr               { $$ = &astExpr{"%", $1, $3} }
         |   expr EQ expr                { $$ = &astExpr{"==", $1, $3} }
         |   expr NE expr                { $$ = &astExpr{"!=", $1, $3} }
         |   expr GE expr                { $$ = &astExpr{">=", $1, $3} }
