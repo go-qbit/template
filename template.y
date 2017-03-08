@@ -132,7 +132,9 @@ filter:     IDENTIFIER                  { $$ = &astFilter{name: $1} }
 
 
 loop:       FOR IDENTIFIER IN expr ';' body ';' END
-                                        { $$ = &astLoop{$2, $4, $6} }
+                                        { $$ = &astLoop{"_", $2, $4, $6} }
+        |   FOR IDENTIFIER ',' IDENTIFIER IN expr ';' body ';' END
+                                        { $$ = &astLoop{$2, $4, $6, $8} }
 
 condition:  IF expr ';' body ';' END    { $$ = &astCondition{$2, $4, nil} }
         |   IF expr ';' body ';' ELSE ';' body ';' END

@@ -14,4 +14,8 @@
     [% t[0].StructField.F1["test"] %]
 
     [% 5 + 10 * 15 / 20 %]
+
+    [% FOR i,v IN t %]
+        [% i %]: [%+ v %]
+    [% END %]
 [% END %]

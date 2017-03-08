@@ -334,6 +334,7 @@ func (n *astFilter) WriteGo(w io.Writer, opts *GenGoOpts) {
 }
 
 type astLoop struct {
+	indexVariable string
 	localVariable string
 	loopVariable  iAstNode
 	body          iAstNode
@@ -353,7 +354,7 @@ func (n *astLoop) GetImports() []string {
 	return res
 }
 func (n *astLoop) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "for _, "+n.localVariable+":= range ")
+	io.WriteString(w, "for "+n.indexVariable+"," + n.localVariable + ":= range ")
 	n.loopVariable.WriteGo(w, opts)
 	io.WriteString(w, "{\n")
 	n.body.WriteGo(w, opts)
