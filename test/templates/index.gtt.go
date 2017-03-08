@@ -48,4 +48,5 @@ func ProcessTestExprSyntax(w io.Writer, i int, b bool, s string) {
 		io.WriteString(w, "rspaces  ")
 		io.WriteString(w, "   lspaces")
 	}
+	io.WriteString(w, fmt.Sprint(s[10]))
 }

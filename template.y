@@ -107,6 +107,8 @@ expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }
         |   '(' expr ')'                { $$ = &astParenthesis{$2} }
         |   IDENTIFIER '(' param_list ')'
                                         { $$ = &astFunc{$1, $3} }
+        |   IDENTIFIER '[' NUMBER ']'   { $$ = &astValue{$1 + "[" + $3 + "]"} }
+        |   IDENTIFIER '[' STRING ']'   { $$ = &astValue{$1 + "[" + $3 + "]"} }
         |   IDENTIFIER                  { $$ = &astValue{$1} }
         |   STRING                      { $$ = &astString{$1} }
         |   NUMBER                      { $$ = &astValue{$1} }
