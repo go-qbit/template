@@ -118,7 +118,12 @@ func (t *Template) ParseFile(filename string) error {
 		return fmt.Errorf("%s: %s", filename, err.Error())
 	}
 
-	return t.Parse(string(data))
+	err = t.Parse(string(data))
+	if err != nil {
+		return fmt.Errorf("%s: %s", filename, err.Error())
+	}
+
+	return nil
 }
 
 func (t *Template) WriteGo(w io.Writer, packageName string) {
