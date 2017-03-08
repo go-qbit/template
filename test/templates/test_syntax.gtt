@@ -1,0 +1,17 @@
+[% IMPORT(
+    "bytes"
+) %]
+
+[% TEMPLATE TestExprSyntax(i int, b bool, s string, t []TestType, ptr *TestType, buf *bytes.Buffer) %]
+    [% IF i > 0 OR i < 100 AND !b || i <= 200 && i >= 150 || !(i == 0 && !b) %]
+        [% len(s) %]
+        [% +%]   spaces  [%+ %]
+        [% %]   rspaces  [%+ %]
+        [% +%]   lspaces  [% %]
+    [% END %]
+
+    [% s[10] | HTML %]
+    [% t[0].StructField.F1["test"] %]
+
+    [% 5 + 10 * 15 / 20 %]
+[% END %]

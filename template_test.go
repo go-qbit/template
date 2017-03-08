@@ -16,6 +16,10 @@ func TestTemplate_Parse(t *testing.T) {
 		return
 	}
 
+	if !assert.NoError(t, tpl.ParseFile("test/templates/test_syntax.gtt")) {
+		return
+	}
+
 	buf := &bytes.Buffer{}
 	tpl.WriteGo(buf, "test")
 

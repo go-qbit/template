@@ -40,15 +40,3 @@ func ProcessUserName(w io.Writer, user User) {
 	io.WriteString(w, " ")
 	io.WriteString(w, filter.HTML(user.Lastname))
 }
-
-func ProcessTestExprSyntax(w io.Writer, i int, b bool, s string, t []TestType) {
-	if i > 0 || i < 100 && !b || i <= 200 && i >= 150 || !(i == 0 && !b) {
-		io.WriteString(w, fmt.Sprint(len(s)))
-		io.WriteString(w, "   spaces  ")
-		io.WriteString(w, "rspaces  ")
-		io.WriteString(w, "   lspaces")
-	}
-	io.WriteString(w, filter.HTML(s[10]))
-	io.WriteString(w, fmt.Sprint(t[0].StructField.F1["test"]))
-	io.WriteString(w, fmt.Sprint(5+10*15/20))
-}

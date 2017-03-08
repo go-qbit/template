@@ -82,6 +82,9 @@ var:                                    { $$ = nil }
 var_type:   IDENTIFIER                  { $$ = $1 }
         |   '[' ']' IDENTIFIER          { $$ = "[]" + $3 }
         |   '*' IDENTIFIER              { $$ = "*" + $2 }
+        |   IDENTIFIER '.' IDENTIFIER   { $$ = $1 + "." + $3 }
+        |   '*' IDENTIFIER '.' IDENTIFIER
+                                        { $$ = "*" + $2 + "." + $4 }
 
 body:       body_stmt                   { $$ = &astList{[]iAstNode{$1}} }
         |   body ';' body_stmt          { $$.Add($3) }
