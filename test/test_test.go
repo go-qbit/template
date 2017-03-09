@@ -4,6 +4,7 @@ package test
 
 import (
 	"bytes"
+	"context"
 	"html/template"
 	"testing"
 
@@ -64,7 +65,7 @@ func init() {
 
 func TestProcessTest(t *testing.T) {
 	buf := &bytes.Buffer{}
-	templates.ProcessTest(buf, "<Header>", []templates.User{
+	templates.ProcessTest(context.Background(), buf, "<Header>", []templates.User{
 		{"Ivan", "Sidorov", 20, true},
 		{"Petr", "Ivanov", 30, true},
 		{"James", "Bond", 40, true},
@@ -82,7 +83,7 @@ func BenchmarkProcessTest(b *testing.B) {
 	buf := &bytes.Buffer{}
 	for i := 0; i < b.N; i++ {
 		buf.Reset()
-		templates.ProcessTest(buf, "<Header>", BenchmarkUsers)
+		templates.ProcessTest(context.Background(), buf, "<Header>", BenchmarkUsers)
 	}
 }
 

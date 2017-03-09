@@ -124,7 +124,7 @@ type astTemplate struct {
 }
 
 func (n *astTemplate) GetImports() []string {
-	res := []string{}
+	res := []string{"context"}
 	if n.body != nil {
 		res = append(res, n.body.GetImports()...)
 	}
@@ -133,7 +133,7 @@ func (n *astTemplate) GetImports() []string {
 }
 
 func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "func Process"+n.name+"(w io.Writer")
+	io.WriteString(w, "func Process"+n.name+"(ctx context.Context, w io.Writer")
 
 	for _, v := range n.vars.children {
 		io.WriteString(w, ", ")
@@ -143,7 +143,7 @@ func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, ") {\n")
 
 	if n.wrapper != nil {
-		io.WriteString(w, "Wrapper"+n.wrapper.name+"(w, func() {\n")
+		io.WriteString(w, "Wrapper"+n.wrapper.name+"(ctx, w, func() {\n")
 	}
 
 	if n.body != nil {
@@ -177,7 +177,7 @@ type astWrapper struct {
 }
 
 func (n *astWrapper) GetImports() []string {
-	res := []string{}
+	res := []string{"context"}
 	if n.body != nil {
 		res = append(res, n.body.GetImports()...)
 	}
@@ -186,7 +186,7 @@ func (n *astWrapper) GetImports() []string {
 }
 
 func (n *astWrapper) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "func Wrapper"+n.name+"(w io.Writer, tplClbF func()")
+	io.WriteString(w, "func Wrapper"+n.name+"(ctx context.Context, w io.Writer, tplClbF func()")
 	for _, v := range n.vars.children {
 		io.WriteString(w, ", ")
 		v.WriteGo(w, opts)
@@ -354,7 +354,7 @@ func (n *astLoop) GetImports() []string {
 	return res
 }
 func (n *astLoop) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "for "+n.indexVariable+"," + n.localVariable + ":= range ")
+	io.WriteString(w, "for "+n.indexVariable+","+n.localVariable+":= range ")
 	n.loopVariable.WriteGo(w, opts)
 	io.WriteString(w, "{\n")
 	n.body.WriteGo(w, opts)
@@ -408,7 +408,7 @@ type astProcessTemplate struct {
 
 func (*astProcessTemplate) GetImports() []string { return []string{} }
 func (n *astProcessTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "Process"+n.name+"(w")
+	io.WriteString(w, "Process"+n.name+"(ctx, w")
 	for _, param := range n.params.children {
 		io.WriteString(w, ", ")
 		param.WriteGo(w, opts)
