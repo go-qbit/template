@@ -1,8 +1,9 @@
 [% IMPORT(
-    "bytes"
+    "bytes",
+    "github.com/go-qbit/template/test/templates/extwrapper"
 ) %]
 
-[% TEMPLATE TestExprSyntax(i int, b bool, s string, t []TestType, ptr *TestType, buf *bytes.Buffer) %]
+[% TEMPLATE TestExprSyntax(i int, b bool, s string, t []TestType, ptr *TestType, buf *bytes.Buffer) USE WRAPPER extwrapper.Wrapper() %]
     [% IF i > 0 OR i < 100 AND !b || i <= 200 && i >= 150 || !(i == 0 && !b) %]
         [% len(s) %]
         [% +%]   spaces  [%+ %]

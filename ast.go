@@ -124,7 +124,7 @@ type astTemplate struct {
 }
 
 func (n *astTemplate) GetImports() []string {
-	res := []string{"context"}
+	res := []string{"context", "io"}
 	if n.body != nil {
 		res = append(res, n.body.GetImports()...)
 	}
@@ -143,6 +143,9 @@ func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, ") {\n")
 
 	if n.wrapper != nil {
+		if n.wrapper.pkgName != "" {
+			io.WriteString(w, n.wrapper.pkgName+".")
+		}
 		io.WriteString(w, "Wrapper"+n.wrapper.name+"(ctx, w, func() {\n")
 	}
 
@@ -152,9 +155,11 @@ func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
 
 	if n.wrapper != nil {
 		io.WriteString(w, "}")
-		for _, p := range n.wrapper.params.children {
-			io.WriteString(w, ", ")
-			p.WriteGo(w, opts)
+		if n.wrapper.params != nil {
+			for _, p := range n.wrapper.params.children {
+				io.WriteString(w, ", ")
+				p.WriteGo(w, opts)
+			}
 		}
 		io.WriteString(w, ")\n")
 	}
@@ -163,8 +168,9 @@ func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
 }
 
 type astUseWrapper struct {
-	name   string
-	params *astList
+	pkgName string
+	name    string
+	params  *astList
 }
 
 func (*astUseWrapper) GetImports() []string                   { return []string{} }
@@ -177,7 +183,7 @@ type astWrapper struct {
 }
 
 func (n *astWrapper) GetImports() []string {
-	res := []string{"context"}
+	res := []string{"context", "io"}
 	if n.body != nil {
 		res = append(res, n.body.GetImports()...)
 	}
@@ -187,10 +193,16 @@ func (n *astWrapper) GetImports() []string {
 
 func (n *astWrapper) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "func Wrapper"+n.name+"(ctx context.Context, w io.Writer, tplClbF func()")
-	for _, v := range n.vars.children {
-		io.WriteString(w, ", ")
-		v.WriteGo(w, opts)
+
+	if n.vars != nil {
+		for _, v := range n.vars.children {
+			if v != nil {
+				io.WriteString(w, ", ")
+				v.WriteGo(w, opts)
+			}
+		}
 	}
+
 	io.WriteString(w, ") {\n")
 
 	if n.body != nil {

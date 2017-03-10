@@ -67,7 +67,9 @@ macros_stmt:                            { $$ = nil }
 
 use_wrapper:                            { $$ = nil }
         |   USE WRAPPER IDENTIFIER '(' param_list ')'
-                                        { $$ = &astUseWrapper{$3, $5} }
+                                        { $$ = &astUseWrapper{"", $3, $5} }
+        |   USE WRAPPER IDENTIFIER '.' IDENTIFIER '(' param_list ')'
+                                        { $$ = &astUseWrapper{$3, $5, $7} }
 
 param_list:                             { $$ = nil }
         |   expr                        { $$ = &astList{[]iAstNode{$1}} }

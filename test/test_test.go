@@ -1,4 +1,5 @@
 //go:generate go run ../ttgen/main.go -package templates templates/*.gtt
+//go:generate go run ../ttgen/main.go -package extwrapper templates/extwrapper/*.gtt
 
 package test
 
