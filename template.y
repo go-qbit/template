@@ -116,7 +116,7 @@ expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }
         |   expr AND expr               { $$ = &astExpr{"&&", $1, $3} }
         |   NOT expr                    { $$ = &astExpr{"!", nil, $2} }
         |   '(' expr ')'                { $$ = &astParenthesis{$2} }
-        |   IDENTIFIER '(' param_list ')'
+        |   var_value '(' param_list ')'
                                         { $$ = &astFunc{$1, $3} }
         |   var_value                   { $$ = &astValue{$1} }
         |   STRING                      { $$ = &astString{$1} }
