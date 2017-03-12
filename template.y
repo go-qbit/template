@@ -29,7 +29,7 @@ import (
 %token  USE
 %token  CONTENT_MARKER
 %token  PROCESS
-%token  EQ NE GE LE OR AND NOT
+%token  EQ NE GE LE OR AND NOT ASSIGNMENT
 
 %type   <string>        STRING IDENTIFIER NUMBER var_type var_value
 %type	<iAstNode>      top file header macros_stmt var body_stmt expr loop condition
@@ -95,10 +95,12 @@ body_stmt:                              { $$ = nil }
         |   expr                        { $$ = &astWriteValue{$1} }
         |   loop                        { $$ = $1 }
         |   condition                   { $$ = $1 }
+        |   var_value '=' expr          { $$ = &astAssignment{"=", &astValue{$1}, $3} }
+        |   IDENTIFIER ASSIGNMENT expr  { $$ = &astAssignment{":=", &astValue{$1}, $3} }
         |   CONTENT_MARKER              { $$ = &astWriteContent{} }
         |   PROCESS IDENTIFIER '(' param_list ')'
                                         { $$ = &astProcessTemplate{$2, $4} }
-        | expr '|' filter               { $3.value = $1; $$ = &astWriteString{$3} }
+        |   expr '|' filter             { $3.value = $1; $$ = &astWriteString{$3} }
 
 
 expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }

@@ -46,6 +46,7 @@ var simpleTokens = []simpleToken{
 	{"OR", OR},
 	{"IF", IF},
 	{"IN", IN},
+	{":=", ASSIGNMENT},
 	{"==", EQ},
 	{"!=", NE},
 	{">=", GE},

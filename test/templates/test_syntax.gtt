@@ -21,4 +21,8 @@
     [% END %]
 
     [% buf.WriteString("test") %]
+
+    [% a := i %]
+    [% a = i %]
+    [% a %]
 [% END %]

@@ -26,5 +26,8 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 			io.WriteString(w, fmt.Sprint(v))
 		}
 		io.WriteString(w, fmt.Sprint(buf.WriteString("test")))
+		a := i
+		a = i
+		io.WriteString(w, fmt.Sprint(a))
 	})
 }

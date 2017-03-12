@@ -303,6 +303,19 @@ func (n *astExpr) WriteGo(w io.Writer, opts *GenGoOpts) {
 	n.operand2.WriteGo(w, opts)
 }
 
+type astAssignment struct {
+	operator           string
+	operand1, operand2 iAstNode
+}
+
+func (n *astAssignment) GetImports() []string { return []string{} }
+func (n *astAssignment) WriteGo(w io.Writer, opts *GenGoOpts) {
+	n.operand1.WriteGo(w, opts)
+	io.WriteString(w, n.operator)
+	n.operand2.WriteGo(w, opts)
+	io.WriteString(w, "\n")
+}
+
 type astParenthesis struct {
 	expr iAstNode
 }
