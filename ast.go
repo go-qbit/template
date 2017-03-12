@@ -289,18 +289,26 @@ type astExpr struct {
 }
 
 func (n *astExpr) GetImports() []string {
+	var res []string
+
 	if n.operand1 != nil {
-		return append(n.operand1.GetImports(), n.operand2.GetImports()...)
-	} else {
-		return n.operand2.GetImports()
+		res = append(res, n.operand1.GetImports()...)
 	}
+	if n.operand2 != nil {
+		res = append(res, n.operand2.GetImports()...)
+	}
+
+	return res
 }
 func (n *astExpr) WriteGo(w io.Writer, opts *GenGoOpts) {
 	if n.operand1 != nil {
 		n.operand1.WriteGo(w, opts)
 	}
 	io.WriteString(w, n.operator)
-	n.operand2.WriteGo(w, opts)
+
+	if n.operand2 != nil {
+		n.operand2.WriteGo(w, opts)
+	}
 }
 
 type astAssignment struct {
@@ -358,14 +366,14 @@ func (n *astFilter) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, ")")
 }
 
-type astLoop struct {
+type astRangeLoop struct {
 	indexVariable string
 	localVariable string
 	loopVariable  iAstNode
 	body          iAstNode
 }
 
-func (n *astLoop) GetImports() []string {
+func (n *astRangeLoop) GetImports() []string {
 	res := []string{}
 
 	if n.loopVariable != nil {
@@ -378,9 +386,54 @@ func (n *astLoop) GetImports() []string {
 
 	return res
 }
-func (n *astLoop) WriteGo(w io.Writer, opts *GenGoOpts) {
+func (n *astRangeLoop) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "for "+n.indexVariable+","+n.localVariable+":= range ")
 	n.loopVariable.WriteGo(w, opts)
+	io.WriteString(w, "{\n")
+	n.body.WriteGo(w, opts)
+	io.WriteString(w, "}\n")
+}
+
+type astLoop struct {
+	expr1, expr2, expr3, body iAstNode
+}
+
+func (n *astLoop) GetImports() []string {
+	res := []string{}
+
+	if n.expr1 != nil {
+		res = append(res, n.expr1.GetImports()...)
+	}
+	if n.expr2 != nil {
+		res = append(res, n.expr2.GetImports()...)
+	}
+	if n.expr3 != nil {
+		res = append(res, n.expr3.GetImports()...)
+	}
+
+	if n.body != nil {
+		res = append(res, n.body.GetImports()...)
+	}
+
+	return res
+}
+func (n *astLoop) WriteGo(w io.Writer, opts *GenGoOpts) {
+	io.WriteString(w, "for ")
+
+	if n.expr1 != nil {
+		n.expr1.WriteGo(w, opts)
+	}
+	io.WriteString(w, ";")
+
+	if n.expr2 != nil {
+		n.expr2.WriteGo(w, opts)
+	}
+	io.WriteString(w, ";")
+
+	if n.expr3 != nil {
+		n.expr3.WriteGo(w, opts)
+	}
+
 	io.WriteString(w, "{\n")
 	n.body.WriteGo(w, opts)
 	io.WriteString(w, "}\n")

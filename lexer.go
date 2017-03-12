@@ -53,6 +53,8 @@ var simpleTokens = []simpleToken{
 	{"<=", LE},
 	{"&&", AND},
 	{"||", OR},
+	{"++", INC},
+	{"--", DEC},
 	{"!", NOT},
 }
 

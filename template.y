@@ -29,7 +29,7 @@ import (
 %token  USE
 %token  CONTENT_MARKER
 %token  PROCESS
-%token  EQ NE GE LE OR AND NOT ASSIGNMENT
+%token  EQ NE GE LE OR AND NOT ASSIGNMENT INC DEC
 
 %type   <string>        STRING IDENTIFIER NUMBER var_type var_value
 %type	<iAstNode>      top file header macros_stmt var body_stmt expr loop condition
@@ -118,6 +118,8 @@ expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }
         |   expr AND expr               { $$ = &astExpr{"&&", $1, $3} }
         |   NOT expr                    { $$ = &astExpr{"!", nil, $2} }
         |   '(' expr ')'                { $$ = &astParenthesis{$2} }
+        |   var_value INC               { $$ = &astExpr{"++", &astValue{$1}, nil} }
+        |   var_value DEC               { $$ = &astExpr{"--", &astValue{$1}, nil} }
         |   var_value '(' param_list ')'
                                         { $$ = &astFunc{$1, $3} }
         |   var_value                   { $$ = &astValue{$1} }
@@ -137,9 +139,11 @@ filter:     IDENTIFIER                  { $$ = &astFilter{name: $1} }
 
 
 loop:       FOR IDENTIFIER IN expr ';' body ';' END
-                                        { $$ = &astLoop{"_", $2, $4, $6} }
+                                        { $$ = &astRangeLoop{"_", $2, $4, $6} }
         |   FOR IDENTIFIER ',' IDENTIFIER IN expr ';' body ';' END
-                                        { $$ = &astLoop{$2, $4, $6, $8} }
+                                        { $$ = &astRangeLoop{$2, $4, $6, $8} }
+        |   FOR IDENTIFIER ASSIGNMENT expr ';' expr ';' expr ';' body ';' END
+                                        { $$ = &astLoop{&astExpr{":=", &astValue{$2}, $4}, $6, $8, $10} }
 
 condition:  IF expr ';' body ';' END    { $$ = &astCondition{$2, $4, nil} }
         |   IF expr ';' body ';' ELSE ';' body ';' END

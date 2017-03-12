@@ -11,6 +11,10 @@
         [% +%]   lspaces  [% %]
     [% END %]
 
+    [% FOR i := 0; i < 10; i++ %]
+        [% i %]
+    [% END %]
+
     [% s[10] | HTML %]
     [% t[0].StructField.F1["test"] %]
 
