@@ -1,0 +1,11 @@
+[% WRAPPER page(caption string) %]
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>[% caption | HTML %]</title>
+    </head>
+    <body>
+        [% <CONTENT> %]
+    </<body>
+</html>
+[% END %]
