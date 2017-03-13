@@ -135,9 +135,13 @@ func (n *astTemplate) GetImports() []string {
 func (n *astTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, "func Process"+n.name+"(ctx context.Context, w io.Writer")
 
-	for _, v := range n.vars.children {
-		io.WriteString(w, ", ")
-		v.WriteGo(w, opts)
+	if n.vars != nil {
+		for _, v := range n.vars.children {
+			if v != nil {
+				io.WriteString(w, ", ")
+				v.WriteGo(w, opts)
+			}
+		}
 	}
 
 	io.WriteString(w, ") {\n")
@@ -480,16 +484,22 @@ func (n *astCondition) WriteGo(w io.Writer, opts *GenGoOpts) {
 }
 
 type astProcessTemplate struct {
-	name   string
-	params *astList
+	pkgName string
+	name    string
+	params  *astList
 }
 
 func (*astProcessTemplate) GetImports() []string { return []string{} }
 func (n *astProcessTemplate) WriteGo(w io.Writer, opts *GenGoOpts) {
+	if n.pkgName != "" {
+		io.WriteString(w, n.pkgName+".")
+	}
 	io.WriteString(w, "Process"+n.name+"(ctx, w")
-	for _, param := range n.params.children {
-		io.WriteString(w, ", ")
-		param.WriteGo(w, opts)
+	if n.params != nil {
+		for _, param := range n.params.children {
+			io.WriteString(w, ", ")
+			param.WriteGo(w, opts)
+		}
 	}
 	io.WriteString(w, ")\n")
 }

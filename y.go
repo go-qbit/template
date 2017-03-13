@@ -93,7 +93,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line template.y:152
+//line template.y:154
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -102,92 +102,95 @@ var yyExca = [...]int{
 	-2, 0,
 }
 
-const yyNprod = 73
+const yyNprod = 74
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 495
+const yyLast = 519
 
 var yyAct = [...]int{
 
-	49, 117, 137, 136, 39, 47, 75, 76, 77, 78,
-	79, 80, 159, 148, 134, 134, 70, 71, 72, 73,
-	74, 68, 69, 46, 90, 82, 83, 174, 144, 143,
-	134, 67, 85, 86, 84, 38, 48, 170, 85, 86,
-	75, 76, 77, 78, 79, 80, 168, 135, 63, 134,
-	70, 71, 72, 73, 74, 68, 69, 89, 92, 169,
-	31, 163, 94, 91, 58, 59, 52, 52, 160, 103,
+	49, 117, 82, 83, 145, 47, 31, 85, 86, 46,
+	138, 84, 137, 39, 126, 85, 86, 90, 81, 123,
+	38, 148, 48, 124, 75, 76, 77, 78, 79, 80,
+	179, 175, 128, 33, 70, 71, 72, 73, 74, 68,
+	69, 82, 83, 32, 164, 127, 135, 97, 63, 67,
+	84, 98, 151, 173, 85, 86, 168, 89, 92, 52,
+	52, 163, 94, 135, 150, 146, 135, 135, 165, 103,
 	104, 105, 106, 107, 108, 109, 110, 111, 112, 113,
-	114, 115, 116, 152, 56, 118, 125, 33, 122, 96,
-	62, 52, 82, 83, 146, 57, 97, 32, 118, 131,
-	98, 84, 66, 100, 127, 85, 86, 42, 81, 53,
-	58, 59, 60, 41, 61, 158, 157, 126, 26, 12,
-	129, 52, 54, 55, 118, 138, 139, 34, 141, 29,
-	56, 145, 133, 100, 142, 147, 62, 28, 20, 29,
-	21, 57, 123, 95, 19, 18, 118, 153, 11, 91,
-	23, 155, 156, 52, 87, 154, 10, 36, 22, 43,
-	5, 150, 27, 166, 8, 16, 9, 165, 7, 167,
-	121, 120, 140, 132, 52, 172, 62, 52, 25, 119,
-	37, 17, 102, 93, 88, 52, 52, 65, 52, 100,
-	64, 45, 44, 52, 52, 52, 40, 100, 24, 52,
-	14, 13, 101, 35, 6, 100, 15, 100, 4, 51,
-	50, 100, 75, 76, 77, 78, 79, 80, 3, 2,
-	1, 30, 70, 71, 72, 73, 74, 68, 69, 0,
-	0, 162, 75, 76, 77, 78, 79, 80, 0, 0,
-	0, 0, 70, 71, 72, 73, 74, 68, 69, 0,
-	0, 161, 75, 76, 77, 78, 79, 80, 0, 0,
-	0, 0, 70, 71, 72, 73, 74, 68, 69, 0,
-	0, 151, 75, 76, 77, 78, 79, 80, 0, 0,
-	0, 0, 70, 71, 72, 73, 74, 68, 69, 0,
-	0, 149, 75, 76, 77, 78, 79, 80, 0, 0,
-	0, 0, 70, 71, 72, 73, 74, 68, 69, 0,
-	0, 128, 75, 76, 77, 78, 79, 80, 0, 0,
-	0, 0, 70, 71, 72, 73, 74, 68, 69, 0,
-	124, 75, 76, 77, 78, 79, 80, 0, 0, 0,
-	0, 70, 71, 72, 73, 74, 68, 69, 53, 58,
-	59, 60, 0, 61, 0, 175, 0, 0, 0, 0,
-	0, 54, 55, 53, 58, 59, 60, 0, 61, 56,
-	173, 0, 0, 0, 0, 62, 54, 55, 0, 0,
-	57, 0, 0, 0, 56, 0, 53, 58, 59, 60,
-	62, 61, 0, 171, 0, 57, 0, 0, 0, 54,
-	55, 53, 58, 59, 60, 0, 61, 56, 164, 0,
-	0, 0, 0, 62, 54, 55, 0, 0, 57, 0,
-	0, 0, 56, 0, 53, 58, 59, 60, 62, 61,
-	0, 130, 0, 57, 0, 0, 0, 54, 55, 53,
-	58, 59, 60, 0, 61, 56, 99, 0, 0, 0,
-	0, 62, 54, 55, 0, 0, 57, 0, 0, 0,
-	56, 0, 53, 58, 59, 60, 62, 61, 0, 0,
-	0, 57, 0, 0, 0, 54, 55, 0, 0, 0,
+	114, 115, 116, 155, 52, 118, 96, 66, 122, 100,
+	75, 76, 77, 78, 79, 80, 42, 41, 118, 132,
+	70, 71, 72, 73, 74, 68, 69, 26, 12, 174,
+	91, 58, 59, 130, 52, 136, 34, 135, 29, 100,
+	28, 20, 29, 21, 118, 139, 147, 141, 134, 143,
+	95, 56, 19, 18, 11, 144, 149, 62, 91, 23,
+	87, 22, 57, 36, 43, 5, 7, 52, 118, 156,
+	153, 27, 118, 157, 159, 160, 10, 16, 158, 17,
+	142, 25, 121, 120, 8, 62, 9, 140, 171, 37,
+	52, 133, 170, 52, 172, 119, 102, 93, 100, 88,
+	177, 65, 64, 52, 52, 45, 52, 44, 100, 40,
+	24, 52, 52, 52, 14, 13, 100, 52, 100, 101,
+	35, 6, 100, 75, 76, 77, 78, 79, 80, 15,
+	4, 51, 50, 70, 71, 72, 73, 74, 68, 69,
+	3, 2, 167, 75, 76, 77, 78, 79, 80, 1,
+	30, 0, 0, 70, 71, 72, 73, 74, 68, 69,
+	0, 0, 166, 75, 76, 77, 78, 79, 80, 0,
+	0, 0, 0, 70, 71, 72, 73, 74, 68, 69,
+	0, 0, 154, 75, 76, 77, 78, 79, 80, 0,
+	0, 0, 0, 70, 71, 72, 73, 74, 68, 69,
+	0, 0, 152, 75, 76, 77, 78, 79, 80, 0,
+	0, 0, 0, 70, 71, 72, 73, 74, 68, 69,
+	0, 0, 129, 75, 76, 77, 78, 79, 80, 0,
+	0, 0, 0, 70, 71, 72, 73, 74, 68, 69,
+	0, 125, 53, 58, 59, 60, 0, 61, 162, 161,
+	0, 0, 0, 0, 0, 54, 55, 0, 0, 0,
 	0, 0, 0, 56, 0, 0, 0, 0, 0, 62,
-	0, 0, 0, 0, 57,
+	0, 0, 0, 0, 57, 75, 76, 77, 78, 79,
+	80, 0, 0, 0, 0, 70, 71, 72, 73, 74,
+	68, 69, 53, 58, 59, 60, 0, 61, 0, 180,
+	0, 0, 0, 0, 0, 54, 55, 53, 58, 59,
+	60, 0, 61, 56, 178, 0, 0, 0, 0, 62,
+	54, 55, 0, 0, 57, 0, 0, 0, 56, 0,
+	53, 58, 59, 60, 62, 61, 0, 176, 0, 57,
+	0, 0, 0, 54, 55, 53, 58, 59, 60, 0,
+	61, 56, 169, 0, 0, 0, 0, 62, 54, 55,
+	0, 0, 57, 0, 0, 0, 56, 0, 53, 58,
+	59, 60, 62, 61, 0, 131, 0, 57, 0, 0,
+	0, 54, 55, 53, 58, 59, 60, 0, 61, 56,
+	99, 0, 0, 0, 0, 62, 54, 55, 0, 0,
+	57, 0, 0, 0, 56, 0, 53, 58, 59, 60,
+	62, 61, 0, 0, 0, 57, 0, 0, 0, 54,
+	55, 0, 0, 0, 0, 0, 0, 56, 0, 0,
+	0, 0, 0, 62, 0, 0, 0, 0, 57,
 }
 var yyPact = [...]int{
 
-	146, -1000, -1000, 151, -1000, 112, 81, -1000, 197, 196,
-	-1000, 160, 151, 109, 108, 101, -1000, -1000, 194, 194,
-	80, 157, 100, -1000, 56, 90, -1000, -1000, 141, 194,
-	-1000, -5, -38, 192, 75, 69, 144, -1000, 188, 187,
-	-17, 458, 458, 186, -1000, -1000, 183, 64, -1000, -13,
-	-1000, -1000, 65, 128, -1000, 180, 59, 59, -1000, -1000,
-	179, 59, 107, 51, 60, -1000, 435, 178, 59, 59,
-	59, 59, 59, 59, 59, 59, 59, 59, 59, 59,
-	59, 59, -1000, -1000, 59, 175, 165, 59, 106, -1000,
-	-2, -1000, 293, 78, 273, 145, 420, 59, 169, -1000,
-	-1000, -1000, 96, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
-	-1000, -1000, -1000, -1000, -1000, -1000, 312, 10, 312, -1000,
-	-39, -40, 312, 59, -1000, 59, 168, 59, 458, -8,
-	-1000, -9, 95, 57, 59, -1000, -1000, -1000, -24, 253,
-	153, 233, 45, -1000, -1000, 59, -1000, 312, -1000, 458,
-	59, 59, 105, -25, 30, 213, 193, -1000, 23, -1000,
-	397, 458, 59, 458, -1000, 8, 21, -1, 382, 458,
-	359, -1000, -11, -1000, 344, -1000,
+	131, -1000, -1000, 151, -1000, 98, 70, -1000, 191, 190,
+	-1000, 152, 151, 97, 96, 84, -1000, -1000, 186, 186,
+	69, 146, 83, -1000, 2, 79, -1000, -1000, 127, 186,
+	-1000, -20, -29, 185, 59, 58, 129, -1000, 183, 181,
+	-31, 482, 482, 178, -1000, -1000, 177, 49, -1000, 5,
+	-1000, -1000, -25, 114, -1000, 175, 106, 106, -1000, -1000,
+	173, 106, 94, 48, 11, -1000, 459, 172, 106, 106,
+	106, 106, 106, 106, 106, 106, 106, 106, 106, 106,
+	106, 106, -1000, -1000, 106, 171, 157, 106, -17, -1000,
+	14, -1000, 284, 6, 264, 134, 444, 106, 167, -1000,
+	-1000, -1000, 92, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
+	-1000, -1000, -1000, -1000, -1000, -1000, 336, 78, 336, -1000,
+	-30, -32, 336, 106, 163, -1000, 106, 156, 106, 482,
+	-33, -1000, 28, 90, -16, 106, -1000, -1000, -1000, 27,
+	16, 244, 142, 224, 45, -1000, -1000, 106, -1000, 336,
+	-1000, 106, 482, 106, 106, 318, 24, 7, 30, 204,
+	184, -1000, 18, -1000, -1000, 421, 482, 106, 482, -1000,
+	15, 71, -7, 406, 482, 383, -1000, -8, -1000, 368,
+	-1000,
 }
 var yyPgo = [...]int{
 
-	0, 221, 24, 220, 219, 218, 168, 150, 36, 0,
-	210, 209, 208, 206, 204, 1, 158, 5, 203, 202,
+	0, 230, 17, 229, 221, 220, 146, 139, 22, 0,
+	212, 211, 210, 209, 201, 1, 141, 5, 200, 199,
 }
 var yyR1 = [...]int{
 
@@ -195,21 +198,21 @@ var yyR1 = [...]int{
 	6, 6, 6, 6, 18, 18, 18, 15, 15, 15,
 	16, 16, 7, 7, 1, 1, 1, 1, 1, 17,
 	17, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+	8, 9, 9, 9, 9, 9, 9, 9, 9, 9,
 	9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-	9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-	9, 2, 2, 2, 2, 2, 19, 19, 10, 10,
-	10, 11, 11,
+	9, 9, 2, 2, 2, 2, 2, 19, 19, 10,
+	10, 10, 11, 11,
 }
 var yyR2 = [...]int{
 
 	0, 1, 2, 0, 1, 5, 1, 3, 1, 3,
 	0, 10, 9, 1, 0, 6, 8, 0, 1, 3,
 	1, 3, 0, 2, 1, 3, 2, 3, 4, 1,
-	3, 0, 1, 1, 1, 3, 3, 1, 5, 3,
+	3, 0, 1, 1, 1, 3, 3, 1, 5, 7,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 2, 3, 2, 2, 4, 1, 1,
-	1, 3, 4, 4, 4, 1, 1, 3, 8, 10,
-	12, 6, 10,
+	3, 3, 3, 3, 2, 3, 2, 2, 4, 1,
+	1, 1, 3, 4, 4, 4, 1, 1, 3, 8,
+	10, 12, 6, 10,
 }
 var yyChk = [...]int{
 
@@ -225,12 +228,13 @@ var yyChk = [...]int{
 	-2, 4, -9, 4, -9, 36, 38, 36, 40, 11,
 	-8, -19, 4, -9, -9, -9, -9, -9, -9, -9,
 	-9, -9, -9, -9, -9, -9, -9, -15, -9, 4,
-	6, 5, -9, 36, 37, 8, 39, 26, 38, -2,
-	11, -15, 4, 36, 39, 37, 42, 42, -15, -9,
-	4, -9, -17, 37, 37, 36, 37, -9, 37, 38,
-	8, 38, 38, -15, -17, -9, -9, 11, 10, 37,
-	38, 38, 38, 38, 11, -17, -9, -17, 38, 38,
-	38, 11, -17, 11, 38, 11,
+	6, 5, -9, 36, 40, 37, 8, 39, 26, 38,
+	-2, 11, -15, 4, 36, 39, 37, 42, 42, -15,
+	4, -9, 4, -9, -17, 37, 37, 36, 37, -9,
+	37, 36, 38, 8, 38, 38, -15, -15, -17, -9,
+	-9, 11, 10, 37, 37, 38, 38, 38, 38, 11,
+	-17, -9, -17, 38, 38, 38, 11, -17, 11, 38,
+	11,
 }
 var yyDef = [...]int{
 
@@ -239,19 +243,20 @@ var yyDef = [...]int{
 	0, 0, 0, 20, 0, 0, 5, 7, 14, 22,
 	23, 24, 0, 0, 0, 0, 0, 21, 0, 0,
 	26, 31, 31, 0, 27, 25, 0, 0, 29, 32,
-	33, 34, 58, 65, 37, 0, 0, 0, 59, 60,
+	33, 34, 59, 66, 37, 0, 0, 0, 60, 61,
 	0, 0, 0, 0, 0, 28, 31, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 55, 56, 17, 0, 0, 0, 0, 53,
-	58, 65, 0, 0, 0, 0, 31, 17, 0, 12,
-	30, 39, 66, 40, 41, 42, 43, 44, 45, 46,
-	47, 48, 49, 50, 51, 52, 35, 0, 18, 61,
-	0, 0, 36, 17, 54, 0, 0, 0, 31, 0,
-	11, 0, 0, 0, 0, 57, 62, 63, 0, 0,
-	0, 0, 0, 64, 15, 17, 67, 19, 38, 31,
-	0, 0, 31, 0, 0, 0, 0, 71, 0, 16,
-	31, 31, 0, 31, 68, 0, 0, 0, 31, 31,
-	31, 69, 0, 72, 31, 70,
+	0, 0, 56, 57, 17, 0, 0, 0, 0, 54,
+	59, 66, 0, 0, 0, 0, 31, 17, 0, 12,
+	30, 40, 67, 41, 42, 43, 44, 45, 46, 47,
+	48, 49, 50, 51, 52, 53, 35, 0, 18, 62,
+	0, 0, 36, 17, 0, 55, 0, 0, 0, 31,
+	0, 11, 0, 0, 0, 0, 58, 63, 64, 0,
+	0, 0, 0, 0, 0, 65, 15, 17, 68, 19,
+	38, 17, 31, 0, 0, 31, 0, 0, 0, 0,
+	0, 72, 0, 16, 39, 31, 31, 0, 31, 69,
+	0, 0, 0, 31, 31, 31, 70, 0, 73, 31,
+	71,
 }
 var yyTok1 = [...]int{
 
@@ -842,210 +847,216 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line template.y:102
 		{
-			yyVAL.iAstNode = &astProcessTemplate{yyDollar[2].string, yyDollar[4].astList}
+			yyVAL.iAstNode = &astProcessTemplate{"", yyDollar[2].string, yyDollar[4].astList}
 		}
 	case 39:
+		yyDollar = yyS[yypt-7 : yypt+1]
+		//line template.y:104
+		{
+			yyVAL.iAstNode = &astProcessTemplate{yyDollar[2].string, yyDollar[4].string, yyDollar[6].astList}
+		}
+	case 40:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line template.y:103
+		//line template.y:105
 		{
 			yyDollar[3].astFilter.value = yyDollar[1].iAstNode
 			yyVAL.iAstNode = &astWriteString{yyDollar[3].astFilter}
 		}
-	case 40:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line template.y:106
-		{
-			yyVAL.iAstNode = &astExpr{">", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
-		}
 	case 41:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line template.y:107
-		{
-			yyVAL.iAstNode = &astExpr{"<", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
-		}
-	case 42:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:108
 		{
-			yyVAL.iAstNode = &astExpr{"+", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{">", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 43:
+	case 42:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:109
 		{
-			yyVAL.iAstNode = &astExpr{"-", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"<", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 44:
+	case 43:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:110
 		{
-			yyVAL.iAstNode = &astExpr{"*", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"+", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 45:
+	case 44:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:111
 		{
-			yyVAL.iAstNode = &astExpr{"/", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"-", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 46:
+	case 45:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:112
 		{
-			yyVAL.iAstNode = &astExpr{"%", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"*", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 47:
+	case 46:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:113
 		{
-			yyVAL.iAstNode = &astExpr{"==", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"/", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 48:
+	case 47:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:114
 		{
-			yyVAL.iAstNode = &astExpr{"!=", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"%", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 49:
+	case 48:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:115
 		{
-			yyVAL.iAstNode = &astExpr{">=", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"==", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 50:
+	case 49:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:116
 		{
-			yyVAL.iAstNode = &astExpr{"<=", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"!=", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 51:
+	case 50:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:117
 		{
-			yyVAL.iAstNode = &astExpr{"||", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{">=", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 52:
+	case 51:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:118
 		{
-			yyVAL.iAstNode = &astExpr{"&&", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
+			yyVAL.iAstNode = &astExpr{"<=", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 53:
-		yyDollar = yyS[yypt-2 : yypt+1]
+	case 52:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:119
 		{
-			yyVAL.iAstNode = &astExpr{"!", nil, yyDollar[2].iAstNode}
+			yyVAL.iAstNode = &astExpr{"||", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 54:
+	case 53:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line template.y:120
 		{
-			yyVAL.iAstNode = &astParenthesis{yyDollar[2].iAstNode}
+			yyVAL.iAstNode = &astExpr{"&&", yyDollar[1].iAstNode, yyDollar[3].iAstNode}
 		}
-	case 55:
+	case 54:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line template.y:121
 		{
-			yyVAL.iAstNode = &astExpr{"++", &astValue{yyDollar[1].string}, nil}
+			yyVAL.iAstNode = &astExpr{"!", nil, yyDollar[2].iAstNode}
+		}
+	case 55:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line template.y:122
+		{
+			yyVAL.iAstNode = &astParenthesis{yyDollar[2].iAstNode}
 		}
 	case 56:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line template.y:122
+		//line template.y:123
+		{
+			yyVAL.iAstNode = &astExpr{"++", &astValue{yyDollar[1].string}, nil}
+		}
+	case 57:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line template.y:124
 		{
 			yyVAL.iAstNode = &astExpr{"--", &astValue{yyDollar[1].string}, nil}
 		}
-	case 57:
+	case 58:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line template.y:124
+		//line template.y:126
 		{
 			yyVAL.iAstNode = &astFunc{yyDollar[1].string, yyDollar[3].astList}
 		}
-	case 58:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line template.y:125
-		{
-			yyVAL.iAstNode = &astValue{yyDollar[1].string}
-		}
 	case 59:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line template.y:126
-		{
-			yyVAL.iAstNode = &astString{yyDollar[1].string}
-		}
-	case 60:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line template.y:127
 		{
 			yyVAL.iAstNode = &astValue{yyDollar[1].string}
 		}
+	case 60:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line template.y:128
+		{
+			yyVAL.iAstNode = &astString{yyDollar[1].string}
+		}
 	case 61:
-		yyDollar = yyS[yypt-3 : yypt+1]
+		yyDollar = yyS[yypt-1 : yypt+1]
 		//line template.y:129
+		{
+			yyVAL.iAstNode = &astValue{yyDollar[1].string}
+		}
+	case 62:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line template.y:131
 		{
 			yyVAL.string = yyDollar[1].string + "." + yyDollar[3].string
 		}
-	case 62:
-		yyDollar = yyS[yypt-4 : yypt+1]
-		//line template.y:130
-		{
-			yyVAL.string = yyDollar[1].string + "[" + yyDollar[3].string + "]"
-		}
 	case 63:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line template.y:131
+		//line template.y:132
 		{
 			yyVAL.string = yyDollar[1].string + "[" + yyDollar[3].string + "]"
 		}
 	case 64:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line template.y:132
+		//line template.y:133
+		{
+			yyVAL.string = yyDollar[1].string + "[" + yyDollar[3].string + "]"
+		}
+	case 65:
+		yyDollar = yyS[yypt-4 : yypt+1]
+		//line template.y:134
 		{
 			yyVAL.string = "*(" + yyDollar[3].string + ")"
 		}
-	case 65:
+	case 66:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line template.y:134
+		//line template.y:136
 		{
 			yyVAL.string = yyDollar[1].string
 		}
-	case 66:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line template.y:137
-		{
-			yyVAL.astFilter = &astFilter{name: yyDollar[1].string}
-		}
 	case 67:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line template.y:138
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line template.y:139
 		{
 			yyVAL.astFilter = &astFilter{name: yyDollar[1].string}
 		}
 	case 68:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line template.y:140
+		{
+			yyVAL.astFilter = &astFilter{name: yyDollar[1].string}
+		}
+	case 69:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line template.y:142
+		//line template.y:144
 		{
 			yyVAL.iAstNode = &astRangeLoop{"_", yyDollar[2].string, yyDollar[4].iAstNode, yyDollar[6].astList}
 		}
-	case 69:
+	case 70:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line template.y:144
+		//line template.y:146
 		{
 			yyVAL.iAstNode = &astRangeLoop{yyDollar[2].string, yyDollar[4].string, yyDollar[6].iAstNode, yyDollar[8].astList}
 		}
-	case 70:
+	case 71:
 		yyDollar = yyS[yypt-12 : yypt+1]
-		//line template.y:146
+		//line template.y:148
 		{
 			yyVAL.iAstNode = &astLoop{&astExpr{":=", &astValue{yyDollar[2].string}, yyDollar[4].iAstNode}, yyDollar[6].iAstNode, yyDollar[8].iAstNode, yyDollar[10].astList}
 		}
-	case 71:
+	case 72:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line template.y:148
+		//line template.y:150
 		{
 			yyVAL.iAstNode = &astCondition{yyDollar[2].iAstNode, yyDollar[4].astList, nil}
 		}
-	case 72:
+	case 73:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line template.y:150
+		//line template.y:152
 		{
 			yyVAL.iAstNode = &astCondition{yyDollar[2].iAstNode, yyDollar[4].astList, yyDollar[8].astList}
 		}

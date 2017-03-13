@@ -99,7 +99,9 @@ body_stmt:                              { $$ = nil }
         |   IDENTIFIER ASSIGNMENT expr  { $$ = &astAssignment{":=", &astValue{$1}, $3} }
         |   CONTENT_MARKER              { $$ = &astWriteContent{} }
         |   PROCESS IDENTIFIER '(' param_list ')'
-                                        { $$ = &astProcessTemplate{$2, $4} }
+                                        { $$ = &astProcessTemplate{"", $2, $4} }
+        |   PROCESS IDENTIFIER '.' IDENTIFIER '(' param_list ')'
+                                        { $$ = &astProcessTemplate{$2, $4, $6} }
         |   expr '|' filter             { $3.value = $1; $$ = &astWriteString{$3} }
 
 
