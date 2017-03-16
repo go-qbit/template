@@ -40,5 +40,5 @@ func genFromFile(fileName, pkgName string) {
 	}
 	defer out.Close()
 
-	t.WriteGo(out, pkgName)
+	t.WriteGo(out, pkgName, fileName)
 }

@@ -42,8 +42,11 @@ const coreTemplate = `
 
 var coreTpl *template.Template
 var BenchmarkUsers []templates.User
+var buf *bytes.Buffer
 
 func init() {
+	buf = bytes.NewBuffer(make([]byte, 100*1024))
+
 	var err error
 	coreTpl, err = template.New("test").Parse(coreTemplate)
 	if err != nil {
@@ -80,21 +83,19 @@ func TestProcessTest(t *testing.T) {
 	//buf.WriteTo(os.Stdout)
 }
 
-func BenchmarkProcessTest(b *testing.B) {
-	buf := &bytes.Buffer{}
-	for i := 0; i < b.N; i++ {
-		buf.Reset()
-		templates.ProcessTest(context.Background(), buf, "<Header>", BenchmarkUsers)
-	}
-}
-
-func BenchmarkCoreTemplate(b *testing.B) {
-	buf := &bytes.Buffer{}
+func BenchmarkGoCoreTemplate(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		buf.Reset()
 		coreTpl.Execute(buf, struct {
 			Header string
 			Users  []templates.User
 		}{"<Header>", BenchmarkUsers})
+	}
+}
+
+func BenchmarkQBitTemplate(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		buf.Reset()
+		templates.ProcessTest(context.Background(), buf, "<Header>", BenchmarkUsers)
 	}
 }
