@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"io"
-	"strings"
 )
 
 type astWriteValue struct {
@@ -24,7 +23,7 @@ func (n *astWriteValue) GetImports() []string {
 func (n *astWriteValue) GetStrings() []string {
 	switch value := n.value.(type) {
 	case *astString:
-		return []string{strings.Trim(value.value, `"`)}
+		return []string{value.value[1 : len(value.value)-1]}
 	default:
 		return n.value.GetStrings()
 	}
@@ -33,7 +32,7 @@ func (n *astWriteValue) GetStrings() []string {
 func (n *astWriteValue) WriteGo(w io.Writer, opts *GenGoOpts) {
 	switch value := n.value.(type) {
 	case *astString:
-		io.WriteString(w, "w.Write("+strVarName(strings.Trim(value.value, `"`), opts.FileName)+")\n")
+		io.WriteString(w, "w.Write("+strVarName(value.value[1:len(value.value)-1], opts.FileName)+")\n")
 	default:
 		io.WriteString(w, "io.WriteString(w, utils.ToString(")
 		n.value.WriteGo(w, opts)
