@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	s8b1a9953c4611296a827abf8c47804d7 = []byte{0x48, 0x65, 0x6c, 0x6c, 0x6f}
+	s89f0d478f2efe8645effcb383ba348f7 = []byte{0x48, 0x65, 0x6c, 0x6c, 0x6f}
 )
 
 func WrapperWrapper(ctx context.Context, w io.Writer, tplClbF func()) {
@@ -14,5 +14,5 @@ func WrapperWrapper(ctx context.Context, w io.Writer, tplClbF func()) {
 }
 
 func ProcessExtTemplate(ctx context.Context, w io.Writer) {
-	w.Write(s8b1a9953c4611296a827abf8c47804d7)
+	w.Write(s89f0d478f2efe8645effcb383ba348f7)
 }

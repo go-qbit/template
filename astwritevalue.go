@@ -33,7 +33,7 @@ func (n *astWriteValue) GetStrings() []string {
 func (n *astWriteValue) WriteGo(w io.Writer, opts *GenGoOpts) {
 	switch value := n.value.(type) {
 	case *astString:
-		io.WriteString(w, "w.Write(" + strVarName(strings.Trim(value.value, `"`), opts.FileName)+")\n")
+		io.WriteString(w, "w.Write("+strVarName(strings.Trim(value.value, `"`), opts.FileName)+")\n")
 	default:
 		io.WriteString(w, "io.WriteString(w, utils.ToString(")
 		n.value.WriteGo(w, opts)
@@ -42,7 +42,7 @@ func (n *astWriteValue) WriteGo(w io.Writer, opts *GenGoOpts) {
 }
 
 func strVarName(s, filename string) string {
-	dgst := md5.Sum([]byte(s))
+	dgst := md5.Sum([]byte(filename + s))
 
 	return "s" + string(hex.EncodeToString(dgst[:]))
 }
