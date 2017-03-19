@@ -46,7 +46,18 @@ func (n *astFile) WriteGo(w io.Writer, opts *GenGoOpts) {
 	if len(stringsSet) > 0 {
 		io.WriteString(w, "var (\n")
 		for s := range stringsSet {
-			io.WriteString(w, strVarName(s, opts.FileName)+" = "+fmt.Sprintf("%#v", []byte(s))+"\n")
+			io.WriteString(w, strVarName(s, opts.FileName)+" = []byte{")
+			for i, b := range []byte(s) {
+				if i > 0 {
+					if i%50 == 0 {
+						io.WriteString(w, ",\n")
+					} else {
+						io.WriteString(w, ", ")
+					}
+				}
+				fmt.Fprintf(w, "0x%X", b)
+			}
+			io.WriteString(w, "}\n")
 		}
 		io.WriteString(w, ")\n\n")
 	}
