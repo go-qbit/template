@@ -25,11 +25,13 @@ func (n *astFunc) GetStrings() []string {
 
 func (n *astFunc) WriteGo(w io.Writer, opts *GenGoOpts) {
 	io.WriteString(w, n.name+"(")
-	for i, param := range n.params.children {
-		if i > 0 {
-			io.WriteString(w, ", ")
+	if n.params != nil {
+		for i, param := range n.params.children {
+			if i > 0 {
+				io.WriteString(w, ", ")
+			}
+			param.WriteGo(w, opts)
 		}
-		param.WriteGo(w, opts)
 	}
 	io.WriteString(w, ")")
 }
