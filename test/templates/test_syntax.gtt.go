@@ -40,5 +40,10 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 		a := i
 		a = i
 		io.WriteString(w, utils.ToString(a))
+		Processtest1(ctx, w, "test")
 	})
+}
+
+func Processtest1(ctx context.Context, w io.Writer, s string) {
+	io.WriteString(w, filter.HTML(s))
 }

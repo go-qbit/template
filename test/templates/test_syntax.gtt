@@ -31,4 +31,10 @@
     [% a := i %]
     [% a = i %]
     [% a %]
+
+    [% PROCESS test1("test") %]
+[% END %]
+
+[% TEMPLATE test1(s string) %]
+    [% s | HTML %]
 [% END %]
