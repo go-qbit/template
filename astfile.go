@@ -3,6 +3,7 @@ package template
 import (
 	"fmt"
 	"io"
+	"strings"
 )
 
 type astFile struct {
@@ -47,6 +48,9 @@ func (n *astFile) WriteGo(w io.Writer, opts *GenGoOpts) {
 		io.WriteString(w, "var (\n")
 		for s := range stringsSet {
 			io.WriteString(w, strVarName(s, opts.FileName)+" = []byte{")
+			s := strings.Replace(s, `\"`, `"`, -1)
+			s = strings.Replace(s, `\\`, `\`, -1)
+
 			for i, b := range []byte(s) {
 				if i > 0 {
 					if i%50 == 0 {
