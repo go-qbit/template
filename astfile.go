@@ -3,6 +3,7 @@ package template
 import (
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 )
 
@@ -45,8 +46,14 @@ func (n *astFile) WriteGo(w io.Writer, opts *GenGoOpts) {
 	}
 
 	if len(stringsSet) > 0 {
-		io.WriteString(w, "var (\n")
+		stringsSlice := make([]string, 0, len(stringsSet))
 		for s := range stringsSet {
+			stringsSlice = append(stringsSlice, s)
+		}
+		sort.Strings(stringsSlice)
+
+		io.WriteString(w, "var (\n")
+		for _, s := range stringsSlice {
 			io.WriteString(w, strVarName(s, opts.FileName)+" = []byte{")
 			s := strings.Replace(s, `\"`, `"`, -1)
 			s = strings.Replace(s, `\\`, `\`, -1)
