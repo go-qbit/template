@@ -1,5 +1,5 @@
 [% WRAPPER Wrapper() %]
-    [% <CONTENT> %]
+    [% CONTENT %]
 [% END %]
 
 [% TEMPLATE ExtTemplate() %]

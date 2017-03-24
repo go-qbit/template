@@ -31,10 +31,10 @@ type compiledReToken struct {
 }
 
 var simpleTokens = []simpleToken{
-	{"<CONTENT>", CONTENT_MARKER},
 	{"TEMPLATE", TEMPLATE},
 	{"WRAPPER", WRAPPER},
 	{"PROCESS", PROCESS},
+	{"CONTENT", CONTENT_MARKER},
 	{"IMPORT", IMPORT},
 	{"VARS", VARS},
 	{"ELSE", ELSE},
