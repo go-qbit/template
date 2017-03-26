@@ -2,6 +2,27 @@
 
 [![Build Status](https://travis-ci.org/go-qbit/template.svg?branch=master)](https://travis-ci.org/go-qbit/template)
 
+* [Description](#description)
+* [Performance](#performance)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Syntax](#syntax)
+  + [Intro](#intro)
+* [Directives](#directives)
+  + [IMPORT](#import)
+  + [TEMPLATE](#template)
+  + [WRAPPER](#wrapper)
+  + [PROCESS](#process)
+  + [IF / ELSE](#if---else)
+  + [FOR](#for)
+* [Filters](#filters)
+  + [HTML](#html)
+* [Operators](#operators)
+  + [Comparison](#comparison)
+  + [Mathematical](#mathematical)
+  + [Boolean](#boolean)
+  + [Unary](#unary)
+
 ## Description
 The `ttgen` generates Go code from a template description. 
 The template syntax looks like Perl Template-Toolkit (http://template-toolkit.org/), 
@@ -15,7 +36,8 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
 ```
 
 ## Installation
-    go get github.com/go-qbit/template/ttgen
+    go get -u github.com/go-qbit/template
+    go install github.com/go-qbit/template/ttgen
 
 ## Usage
 
@@ -159,3 +181,161 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
             io.WriteString(w, filter.HTML(user.Lastname))
         }
         ```
+        
+## Syntax
+
+### Intro
+Template directives are embedded between tags `[%` and `%]`.
+```
+[% IF a == b %]
+    text
+[% END %]
+```
+Several directives within one block must be splitted by `;`.
+```
+[% 
+    IF a == b;
+        FOR v IN array;
+            v;
+        END;
+    END 
+%]
+```
+By default whitespaces around tags is chomped. The code
+```
+Before
+[% v1 %] [% v2 %]
+After
+```
+will produce `BeforeV1V2After` if `v1 == "V1"` and `v2 == "V2"`.
+To save whitespaces use tag `[%+` to save left whitespaces and `+%]` to save right whitespaces.
+The code
+```
+Before
+[%+ v1 +%] [% v2 +%]
+After
+```
+will produce 
+```
+Before
+V1 V2
+After
+```
+if `v1 == "V1"` and `v2 == "V2"`.
+
+## Directives
+
+### IMPORT
+The `IMPORT` directive declares a list of go packages that will be added to result Go file.
+Packages must be quoted by `"` and splitted by ",".  It's optional, but tt must be first directive in a template file if you add it.
+```
+[% 
+    IMPORT(
+        "package1",
+        "package2"
+    )
+%]
+```
+
+### TEMPLATE
+The `TEMPLATE` directive defines a new template:
+```
+ [% TEMPLATE <name>(<parameters_list>) USE WRAPPER <wrapper_name>(<parameters_list>) %]
+    Template content
+ [% END %]
+```
+`USE WRAPPER` is optional, see [WRAPPER](#wrapper) for more information.
+
+### WRAPPER
+The `WRAPPER` directive defines a new template wrapper. The place for content must be declared by `CONTENT`.
+You can use wrappers to define common parts of templates, for example web site header and footer.
+```
+[% WRAPPER page(title string) %]
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <title>[% title | HTML %]</title>
+    </head>
+    <body>
+        [% CONTENT %]
+    </body>
+</html>
+[% END %]
+```
+
+### PROCESS
+The `PROCESS` directive inserts output of other template to current.
+```
+[% PROCESS <template_name>(parameters) %]
+```
+
+### IF / ELSE
+The `IF` / `ELSE` can be used to process or ignore a block based on some run-time condition.
+```
+[% IF a < 10 %]
+    Less
+[% ELSE %]
+    Greater or equal
+[% END %]
+```
+
+### FOR
+The `FOR` directive will iterate through the items in a list/map
+```
+[% FOR item IN list %]
+    [% item | HTML %]
+[% END %]
+
+[% FOR i, item IN list %]
+    [% i %]: [% item | HTML %]
+[% END %]
+
+[% FOR key IN map %]
+    [% key | HTML %]
+[% END %]
+
+[% FOR key, value IN map %]
+    [% key | HTML %]: [% value | HTML %]
+[% END %]
+```
+or while the last expression of the three is true
+```
+[% FOR i:=0; i<100; i++ %]
+    [% i %]
+[% END %]
+```
+
+## Filters
+Any expression can be processed through filter before output
+```
+[% varName | filterName1 %]
+[% (a + b) | filterName2(10) %]
+```
+
+### HTML
+The `HTML` filter escaped dangerous character 
+
+## Operators
+
+### Comparison
+1. `>`, `GT`
+1. `<`, `LT` 
+1. `>=`, `GE`
+1. `<=`, `LE` 
+1. `==`, `EQ`  
+
+### Mathematical
+1. `+`
+1. `-`
+1. `*`
+1. `/`
+1. `%`
+
+### Boolean
+1. `&&`, `AND`
+1. `||`, `OR`
+
+### Unary
+1. `!`, `NOT`
+1. `++`
+1. `--`
