@@ -3,9 +3,10 @@ package template
 import "io"
 
 type astWrapper struct {
-	name string
-	vars *astList
-	body iAstNode
+	name    string
+	vars    *astList
+	wrapper *astUseWrapper
+	body    iAstNode
 }
 
 func (n *astWrapper) GetImports() []string {
@@ -40,8 +41,26 @@ func (n *astWrapper) WriteGo(w io.Writer, opts *GenGoOpts) {
 
 	io.WriteString(w, ") {\n")
 
+	if n.wrapper != nil {
+		if n.wrapper.pkgName != "" {
+			io.WriteString(w, n.wrapper.pkgName+".")
+		}
+		io.WriteString(w, "Wrapper"+n.wrapper.name+"(ctx, w, func() {\n")
+	}
+
 	if n.body != nil {
 		n.body.WriteGo(w, opts)
+	}
+
+	if n.wrapper != nil {
+		io.WriteString(w, "}")
+		if n.wrapper.params != nil {
+			for _, p := range n.wrapper.params.children {
+				io.WriteString(w, ", ")
+				p.WriteGo(w, opts)
+			}
+		}
+		io.WriteString(w, ")\n")
 	}
 
 	io.WriteString(w, "}\n\n")

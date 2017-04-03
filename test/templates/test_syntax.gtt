@@ -41,3 +41,11 @@
 [% TEMPLATE test1(s string) %]
     [% s | HTML | HTML %]
 [% END %]
+
+[% WRAPPER wrapper1() %]
+    [% CONTENT %]
+[% END %]
+
+[% WRAPPER wrapper2() USE WRAPPER wrapper1() %]
+    [% CONTENT %]
+[% END %]

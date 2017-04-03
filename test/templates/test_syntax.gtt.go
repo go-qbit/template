@@ -49,3 +49,13 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 func Processtest1(ctx context.Context, w io.Writer, s string) {
 	io.WriteString(w, filter.HTML(filter.HTML(s)))
 }
+
+func Wrapperwrapper1(ctx context.Context, w io.Writer, tplClbF func()) {
+	tplClbF()
+}
+
+func Wrapperwrapper2(ctx context.Context, w io.Writer, tplClbF func()) {
+	Wrapperwrapper1(ctx, w, func() {
+		tplClbF()
+	})
+}

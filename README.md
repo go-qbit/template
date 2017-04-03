@@ -51,7 +51,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
             <title>[% caption | HTML %]</title>
         </head>
         <body>
-            [% <CONTENT> %]
+            [% CONTENT %]
         </<body>
         </html>
     [% END %]
@@ -260,6 +260,13 @@ You can use wrappers to define common parts of templates, for example web site h
         [% CONTENT %]
     </body>
 </html>
+[% END %]
+```
+
+Also you can use WRAPPER for WRAPPER:
+```
+[% WRAPPER page(title string) USE WRAPPER outer() %]
+    [% CONTENT %]
 [% END %]
 ```
 

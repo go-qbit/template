@@ -47,8 +47,8 @@ macroses:   macros_stmt                 { $$ = &astList{[]iAstNode{$1}} }
 macros_stmt:                            { $$ = nil }
         |   TEMPLATE IDENTIFIER '(' var_list ')' use_wrapper ';' body ';' END
                                         { $$ = &astTemplate{$2, $4, $6, $8} }
-        |   WRAPPER IDENTIFIER '(' var_list ')' ';' body ';' END
-                                        { $$ = &astWrapper{$2, $4, $7} }
+        |   WRAPPER IDENTIFIER '(' var_list ')' use_wrapper ';' body ';' END
+                                        { $$ = &astWrapper{$2, $4, $6, $8} }
         |   STRING                      { $$ = nil }
 
 use_wrapper:                            { $$ = nil }
