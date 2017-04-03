@@ -14,25 +14,11 @@ import (
 	astFilter       *astFilter
 }
 
-%token  IDENTIFIER
-%token  STRING
-%token  NUMBER
-%token  FOR
-%token  IN
-%token  IF
-%token  ELSE
-%token  END
-%token  VARS
-%token  TEMPLATE
-%token  IMPORT
-%token  WRAPPER
-%token  USE
-%token  CONTENT_MARKER
-%token  PROCESS
-%token  EQ NE GE LE OR AND NOT ASSIGNMENT INC DEC
+%token  IDENTIFIER STRING NUMBER FOR IN IF ELSE END VARS TEMPLATE IMPORT WRAPPER USE CONTENT_MARKER
+%token  PROCESS EQ NE GE LE OR AND NOT ASSIGNMENT INC DEC
 
 %type   <string>        STRING IDENTIFIER NUMBER var_type var_value
-%type	<iAstNode>      top file header macros_stmt var body_stmt expr loop condition
+%type	<iAstNode>      top file header macros_stmt var body_stmt filter_expr expr loop condition
 %type   <astList>       imports import_list macroses param_list var_list body
 %type   <astUseWrapper> use_wrapper
 %type   <astFilter>     filter
@@ -102,7 +88,10 @@ body_stmt:                              { $$ = nil }
                                         { $$ = &astProcessTemplate{"", $2, $4} }
         |   PROCESS IDENTIFIER '.' IDENTIFIER '(' param_list ')'
                                         { $$ = &astProcessTemplate{$2, $4, $6} }
-        |   expr '|' filter             { $3.value = $1; $$ = &astWriteString{$3} }
+        |   filter_expr                 { $$ = &astWriteString{$1} }
+
+filter_expr: expr '|' filter            { $3.value = $1; $$ = $3 }
+        |   filter_expr '|' filter      { $3.value = $1; $$ = $3 }
 
 
 expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }

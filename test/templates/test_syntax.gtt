@@ -39,5 +39,5 @@
 [% END %]
 
 [% TEMPLATE test1(s string) %]
-    [% s | HTML %]
+    [% s | HTML | HTML %]
 [% END %]

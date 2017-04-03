@@ -47,5 +47,5 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 }
 
 func Processtest1(ctx context.Context, w io.Writer, s string) {
-	io.WriteString(w, filter.HTML(s))
+	io.WriteString(w, filter.HTML(filter.HTML(s)))
 }
