@@ -324,6 +324,10 @@ The `HTML` filter escaped dangerous character
 
 ## Operators
 
+### Assignments
+1. `=`
+1. `:=`
+
 ### Comparison
 1. `>`, `GT`
 1. `<`, `LT` 
