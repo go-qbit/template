@@ -127,6 +127,9 @@ var_value:  var_value '.' IDENTIFIER    { $$ = $1 + "." + $3 }
 
 filter:     IDENTIFIER                  { $$ = &astFilter{name: $1} }
         |   IDENTIFIER '(' ')'          { $$ = &astFilter{name: $1} }
+        |   IDENTIFIER '.' IDENTIFIER   { $$ = &astFilter{pkg: $1, name: $3} }
+        |   IDENTIFIER '.' IDENTIFIER '(' ')'
+                                        { $$ = &astFilter{pkg: $1, name: $3} }
 
 
 loop:       FOR IDENTIFIER IN expr ';' body ';' END

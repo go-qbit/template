@@ -1,6 +1,7 @@
 [% IMPORT(
     "bytes",
-    "github.com/go-qbit/template/test/templates/extwrapper"
+    "github.com/go-qbit/template/test/templates/extwrapper",
+    "github.com/go-qbit/template/filter"
 ) %]
 
 [% TEMPLATE TestExprSyntax(i int, b bool, s string, t []TestType, ptr *TestType, buf *bytes.Buffer) USE WRAPPER extwrapper.Wrapper() %]
@@ -18,6 +19,7 @@
     [% PROCESS extwrapper.ExtTemplate() %]
 
     [% s[10] | html %]
+    [% s[10] | filter.html %]
     [% t[0].StructField.F1["test"] %]
 
     [% 5 + 10 * 15 / 20 % 4 %]

@@ -3,6 +3,7 @@ package template
 import "io"
 
 type astFilter struct {
+	pkg   string
 	name  string
 	value iAstNode
 }
@@ -16,7 +17,12 @@ func (n *astFilter) GetStrings() []string {
 }
 
 func (n *astFilter) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "filter.Filter"+n.name+"(")
+	pkg := n.pkg
+	if pkg == "" {
+		pkg = "filter"
+	}
+
+	io.WriteString(w, pkg+".Filter"+n.name+"(")
 	n.value.WriteGo(w, opts)
 	io.WriteString(w, ")")
 }

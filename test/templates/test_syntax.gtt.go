@@ -30,6 +30,7 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 		}
 		extwrapper.ProcessExtTemplate(ctx, w)
 		io.WriteString(w, filter.Filterhtml(s[10]))
+		io.WriteString(w, filter.Filterhtml(s[10]))
 		io.WriteString(w, utils.ToString(t[0].StructField.F1["test"]))
 		io.WriteString(w, utils.ToString(5+10*15/20%4))
 		for i, v := range t {
