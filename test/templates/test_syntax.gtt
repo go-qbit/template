@@ -17,7 +17,7 @@
 
     [% PROCESS extwrapper.ExtTemplate() %]
 
-    [% s[10] | HTML %]
+    [% s[10] | html %]
     [% t[0].StructField.F1["test"] %]
 
     [% 5 + 10 * 15 / 20 % 4 %]
@@ -39,7 +39,7 @@
 [% END %]
 
 [% TEMPLATE test1(s string) %]
-    [% s | HTML | HTML %]
+    [% s | html | html %]
 [% END %]
 
 [% WRAPPER wrapper1() %]

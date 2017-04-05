@@ -16,7 +16,7 @@
   + [IF / ELSE](#if---else)
   + [FOR](#for)
 * [Filters](#filters)
-  + [HTML](#html)
+  + [html](#html)
 * [Operators](#operators)
   + [Comparison](#comparison)
   + [Mathematical](#mathematical)
@@ -48,7 +48,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
         <!DOCTYPE html>
         <html>
         <head>
-            <title>[% caption | HTML %]</title>
+            <title>[% caption | html %]</title>
         </head>
         <body>
             [% CONTENT %]
@@ -60,7 +60,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
     
     ```
     [% TEMPLATE Test(header string, users []User) USE WRAPPER page(header) %]
-        <h1>[% header | HTML %]</h1>
+        <h1>[% header | html %]</h1>
         <hr>
         [% FOR user IN users %]
             <p>
@@ -71,7 +71,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
     [% END %]
     
     [% TEMPLATE UserName(user User) %]
-        [% user.Name | HTML +%] [% user.Lastname | HTML %]
+        [% user.Name | html +%] [% user.Lastname | html %]
     [% END %]
     ```
 1. Define a `User` type in `template/user.go`:
@@ -125,7 +125,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
         
         func Wrapperpage(ctx context.Context, w io.Writer, tplClbF func(), caption string) {
             w.Write(sc9e1fc75ad64f59917915544d65154cf)
-            io.WriteString(w, filter.HTML(caption))
+            io.WriteString(w, filter.Filterhtml(caption))
             w.Write(sa25bcc91ec51d6fea14a629de184814c)
             tplClbF()
             w.Write(s33e48fc8e2ea8a4250506db7e0be31fd)
@@ -157,7 +157,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
         func ProcessTest(ctx context.Context, w io.Writer, header string, users []User) {
             Wrapperpage(ctx, w, func() {
                 w.Write(sa5c0aa5a33c99f4179eb48443e8bb33c)
-                io.WriteString(w, filter.HTML(header))
+                io.WriteString(w, Filterhtml(header))
                 w.Write(s2b7c41aee73401e8cd970fba4c3bd4bd)
                 for _, user := range users {
                     w.Write(s4da1a46ec20cf93ee5c846a51e04f0ed)
@@ -176,9 +176,9 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
         }
         
         func ProcessUserName(ctx context.Context, w io.Writer, user User) {
-            io.WriteString(w, filter.HTML(user.Name))
+            io.WriteString(w, Filterhtml(user.Name))
             w.Write(s7215ee9c7d9dc229d2921a40e899ec5f)
-            io.WriteString(w, filter.HTML(user.Lastname))
+            io.WriteString(w, Filterhtml(user.Lastname))
         }
         ```
         
@@ -254,7 +254,7 @@ You can use wrappers to define common parts of templates, for example web site h
 <!DOCTYPE html>
 <html lang="ru">
     <head>
-        <title>[% title | HTML %]</title>
+        <title>[% title | html %]</title>
     </head>
     <body>
         [% CONTENT %]
@@ -290,19 +290,19 @@ The `IF` / `ELSE` can be used to process or ignore a block based on some run-tim
 The `FOR` directive will iterate through the items in a list/map
 ```
 [% FOR item IN list %]
-    [% item | HTML %]
+    [% item | html %]
 [% END %]
 
 [% FOR i, item IN list %]
-    [% i %]: [% item | HTML %]
+    [% i %]: [% item | html %]
 [% END %]
 
 [% FOR key IN map %]
-    [% key | HTML %]
+    [% key | html %]
 [% END %]
 
 [% FOR key, value IN map %]
-    [% key | HTML %]: [% value | HTML %]
+    [% key | html %]: [% value | html %]
 [% END %]
 ```
 or while the last expression of the three is true
@@ -319,8 +319,8 @@ Any expression can be processed through filter before output
 [% (a + b) | filterName2(10) %]
 ```
 
-### HTML
-The `HTML` filter escaped dangerous character 
+### html
+The `html` filter escaped dangerous character 
 
 ## Operators
 

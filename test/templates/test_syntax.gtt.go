@@ -29,7 +29,7 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 			io.WriteString(w, utils.ToString(i))
 		}
 		extwrapper.ProcessExtTemplate(ctx, w)
-		io.WriteString(w, filter.HTML(s[10]))
+		io.WriteString(w, filter.Filterhtml(s[10]))
 		io.WriteString(w, utils.ToString(t[0].StructField.F1["test"]))
 		io.WriteString(w, utils.ToString(5+10*15/20%4))
 		for i, v := range t {
@@ -47,7 +47,7 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 }
 
 func Processtest1(ctx context.Context, w io.Writer, s string) {
-	io.WriteString(w, filter.HTML(filter.HTML(s)))
+	io.WriteString(w, filter.Filterhtml(filter.Filterhtml(s)))
 }
 
 func Wrapperwrapper1(ctx context.Context, w io.Writer, tplClbF func()) {

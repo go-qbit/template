@@ -6,6 +6,6 @@ import (
 	"github.com/go-qbit/template/utils"
 )
 
-func HTML(v interface{}) string {
+func Filterhtml(v interface{}) string {
 	return html.EscapeString(utils.ToString(v))
 }

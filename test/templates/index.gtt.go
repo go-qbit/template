@@ -22,7 +22,7 @@ var (
 func ProcessTest(ctx context.Context, w io.Writer, header string, users []User) {
 	Wrapperpage(ctx, w, func() {
 		w.Write(sedbe56ac7404d66602a627bd637ef2c1)
-		io.WriteString(w, filter.HTML(header))
+		io.WriteString(w, filter.Filterhtml(header))
 		w.Write(s0f9baed348e2ded156c71ed2555fb1da)
 		for _, user := range users {
 			w.Write(sf715636fb0391a8fdd43473a43b1ea72)
@@ -41,7 +41,7 @@ func ProcessTest(ctx context.Context, w io.Writer, header string, users []User) 
 }
 
 func ProcessUserName(ctx context.Context, w io.Writer, user User) {
-	io.WriteString(w, filter.HTML(user.Name))
+	io.WriteString(w, filter.Filterhtml(user.Name))
 	w.Write(s3c00a1c100edee938dfcd27113fd1f93)
-	io.WriteString(w, filter.HTML(user.Lastname))
+	io.WriteString(w, filter.Filterhtml(user.Lastname))
 }

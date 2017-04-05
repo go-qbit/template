@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>[% caption | HTML %]</title>
+        <title>[% caption | html %]</title>
     </head>
     <body>
         [% CONTENT %]

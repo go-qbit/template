@@ -14,7 +14,7 @@ var (
 
 func Wrapperpage(ctx context.Context, w io.Writer, tplClbF func(), caption string) {
 	w.Write(s1ef997d5dd161505e230e6dbbfcaaa48)
-	io.WriteString(w, filter.HTML(caption))
+	io.WriteString(w, filter.Filterhtml(caption))
 	w.Write(s89efc060410cc373c7da167f1451d1f5)
 	tplClbF()
 	w.Write(sf3847a1d6d502a855dd746c6ccc81aae)

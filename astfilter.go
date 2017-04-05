@@ -16,7 +16,7 @@ func (n *astFilter) GetStrings() []string {
 }
 
 func (n *astFilter) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, "filter."+n.name+"(")
+	io.WriteString(w, "filter.Filter"+n.name+"(")
 	n.value.WriteGo(w, opts)
 	io.WriteString(w, ")")
 }

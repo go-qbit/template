@@ -1,5 +1,5 @@
 [% TEMPLATE Test(header string, users []User) USE WRAPPER page(header) %]
-    <h1>[% header | HTML %]</h1>
+    <h1>[% header | html %]</h1>
     <hr>
     [% FOR user IN users %]
         <p>
@@ -10,5 +10,5 @@
 [% END %]
 
 [% TEMPLATE UserName(user User) %]
-    [% user.Name | HTML +%] [% user.Lastname | HTML %]
+    [% user.Name | html +%] [% user.Lastname | html %]
 [% END %]
