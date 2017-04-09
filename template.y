@@ -18,7 +18,7 @@ import (
 %token  PROCESS EQ NE GE LE OR AND NOT ASSIGNMENT INC DEC
 
 %type   <string>        STRING IDENTIFIER NUMBER var_type var_value
-%type	<iAstNode>      top file header macros_stmt var body_stmt filter_expr expr loop condition
+%type	<iAstNode>      top file header import_stmt macros_stmt var body_stmt filter_expr expr loop condition
 %type   <astList>       imports import_list macroses param_list var_list body
 %type   <astUseWrapper> use_wrapper
 %type   <astFilter>     filter
@@ -38,8 +38,11 @@ header:                                 { $$ = nil }
 imports:    IMPORT '(' import_list ')' ';'
                                         { $$ = $3 }
 
-import_list: STRING                     { $$ = &astList{[]iAstNode{&astImport{$1}}} }
-        |   import_list ',' STRING      { $$.Add(&astImport{$3}) }
+import_list: import_stmt                { $$ = &astList{[]iAstNode{$1}} }
+        |   import_list ',' import_stmt { $$.Add($3) }
+
+import_stmt: STRING                     { $$ = &astImport{"", $1} }
+        |   IDENTIFIER STRING           { $$ = &astImport{$1, $2} }
 
 macroses:   macros_stmt                 { $$ = &astList{[]iAstNode{$1}} }
         |   macroses ';' macros_stmt    { $$.Add($3) }

@@ -1,7 +1,7 @@
 package templates
 
 import (
-	"bytes"
+	bts "bytes"
 	"context"
 	"github.com/go-qbit/template/filter"
 	"github.com/go-qbit/template/test/templates/extwrapper"
@@ -17,7 +17,7 @@ var (
 	s6869935619bd5c0e40b40d7b054fb833 = []byte{0x72, 0x73, 0x70, 0x61, 0x63, 0x65, 0x73, 0x20, 0x20}
 )
 
-func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s string, t []TestType, ptr *TestType, buf *bytes.Buffer) {
+func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s string, t []TestType, ptr *TestType, buf *bts.Buffer) {
 	extwrapper.WrapperWrapper(ctx, w, func() {
 		if i > 0 || i < 100 && !b || i <= 200 && i >= 150 || !(i == 0 && !b) {
 			io.WriteString(w, utils.ToString(len(s)))

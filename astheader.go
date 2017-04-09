@@ -3,7 +3,6 @@ package template
 import (
 	"io"
 	"sort"
-	"strings"
 )
 
 type astHeader struct {
@@ -18,13 +17,17 @@ func (n *astHeader) WriteGo(w io.Writer, opts *GenGoOpts) {
 	importsMap := make(map[string]struct{}, len(opts.Imports))
 
 	for _, name := range opts.Imports {
-		importsMap[name] = struct{}{}
+		importsMap[`"`+name+`"`] = struct{}{}
 	}
 
 	if n.imports != nil {
 		for _, child := range n.imports.children {
 			if child != nil {
-				importsMap[strings.Trim(child.(*astImport).pkgName, `"`)] = struct{}{}
+				importStr := child.(*astImport).pkgName
+				if child.(*astImport).alias != "" {
+					importStr = child.(*astImport).alias + " " + importStr
+				}
+				importsMap[importStr] = struct{}{}
 			}
 		}
 	}
@@ -37,7 +40,7 @@ func (n *astHeader) WriteGo(w io.Writer, opts *GenGoOpts) {
 
 	io.WriteString(w, "import (\n")
 	for _, name := range imports {
-		io.WriteString(w, `"`+name+`"`+"\n")
+		io.WriteString(w, name+"\n")
 	}
 	io.WriteString(w, ")\n")
 }
