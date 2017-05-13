@@ -201,6 +201,14 @@ Several directives within one block must be splitted by `;`.
     END 
 %]
 ```
+You can use multiline comments within tags:
+```
+[% a := 10 /* comment */ %]
+[% /*
+    Multiline
+    comment
+*/ %]
+```
 By default whitespaces around tags is chomped. The code
 ```
 Before

@@ -35,7 +35,7 @@ func (t *Template) Parse(text string) error {
 			newPos := strings.Index(text[pos:], "%]")
 
 			if newPos < 0 {
-				return qerror.New("Unclosed [%")
+				return qerror.Errorf("Unclosed [%")
 			}
 
 			inBlock = false

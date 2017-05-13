@@ -15,7 +15,7 @@ import (
 }
 
 %token  IDENTIFIER STRING NUMBER FOR IN IF ELSE END VARS TEMPLATE IMPORT WRAPPER USE CONTENT_MARKER
-%token  PROCESS EQ NE GE LE OR AND NOT ASSIGNMENT INC DEC
+%token  PROCESS EQ NE GE LE OR AND NOT ASSIGNMENT INC DEC COMMENT
 
 %type   <string>        STRING IDENTIFIER NUMBER var_type var_value
 %type	<iAstNode>      top file header import_stmt macros_stmt var body_stmt filter_expr expr loop condition

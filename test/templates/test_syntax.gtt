@@ -38,6 +38,14 @@
 
     "Quoted text"
     With new line
+
+    [%
+        a = i /* comment */ + 1
+        /*
+            Multiline
+            comment
+        */
+    %]
 [% END %]
 
 [% TEMPLATE test1(s string) %]
