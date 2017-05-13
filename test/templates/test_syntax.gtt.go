@@ -14,10 +14,11 @@ var (
 	s499a8aee50bd398a3939a0f359d93145 = []byte{0x20, 0x20, 0x20, 0x73, 0x70, 0x61, 0x63, 0x65, 0x73, 0x20, 0x20}
 	sd4c4fe320d69ba258449839fc65a4f93 = []byte{0x3A, 0x20}
 	s5d98090b412b8b80b94b6c9ffeea34c2 = []byte{0x22, 0x51, 0x75, 0x6F, 0x74, 0x65, 0x64, 0x20, 0x74, 0x65, 0x78, 0x74, 0x22, 0xA, 0x20, 0x20, 0x20, 0x20, 0x57, 0x69, 0x74, 0x68, 0x20, 0x6E, 0x65, 0x77, 0x20, 0x6C, 0x69, 0x6E, 0x65}
+	s6ba52433c82d98af8fafe7a4cc4ddaed = []byte{0x69, 0x6E, 0x74, 0x5F, 0x70, 0x74, 0x72}
 	s6869935619bd5c0e40b40d7b054fb833 = []byte{0x72, 0x73, 0x70, 0x61, 0x63, 0x65, 0x73, 0x20, 0x20}
 )
 
-func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s string, t []TestType, ptr *TestType, buf *bts.Buffer) {
+func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s string, t []TestType, ptr *TestType, buf *bts.Buffer, iv interface{}) {
 	extwrapper.WrapperWrapper(ctx, w, func() {
 		if i > 0 || i < 100 && !b || i <= 200 && i >= 150 || !(i == 0 && !b) {
 			io.WriteString(w, utils.ToString(len(s)))
@@ -42,6 +43,12 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 		a := i
 		a = i
 		io.WriteString(w, utils.ToString(a))
+		t1, t2, t3 := 1, 2, 3
+		t1, t2, t3 = t3+1, t1+2, t2+3
+		_, ok := iv.(*int)
+		if ok {
+			w.Write(s6ba52433c82d98af8fafe7a4cc4ddaed)
+		}
 		Processtest1(ctx, w, "test")
 		w.Write(s5d98090b412b8b80b94b6c9ffeea34c2)
 		a = i + 1

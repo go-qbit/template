@@ -4,7 +4,7 @@
     "github.com/go-qbit/template/filter"
 ) %]
 
-[% TEMPLATE TestExprSyntax(i int, b bool, s string, t []TestType, ptr *TestType, buf *bts.Buffer) USE WRAPPER extwrapper.Wrapper() %]
+[% TEMPLATE TestExprSyntax(i int, b bool, s string, t []TestType, ptr *TestType, buf *bts.Buffer, iv interface{}) USE WRAPPER extwrapper.Wrapper() %]
     [% IF i > 0 OR i < 100 AND !b || i <= 200 && i >= 150 || !(i == 0 && !b) %]
         [% len(s) %]
         [% +%]   spaces  [%+ %]
@@ -33,6 +33,14 @@
     [% a := i %]
     [% a = i %]
     [% a %]
+
+    [% t1, t2, t3 := 1, 2, 3 %]
+    [% t1, t2, t3 = t3 + 1, t1 + 2, t2 + 3 %]
+
+    [% _, ok := iv.(*int) %]
+    [% IF ok %]
+        int_ptr
+    [% END %]
 
     [% PROCESS test1("test") %]
 

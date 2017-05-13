@@ -19,7 +19,7 @@ import (
 
 %type   <string>        STRING IDENTIFIER NUMBER var_type var_value
 %type	<iAstNode>      top file header import_stmt macros_stmt var body_stmt filter_expr expr loop condition
-%type   <astList>       imports import_list macroses param_list var_list body
+%type   <astList>       imports import_list macroses param_list var_list body identifiers_list exprs_list
 %type   <astUseWrapper> use_wrapper
 %type   <astFilter>     filter
 
@@ -76,6 +76,7 @@ var_type:   IDENTIFIER                  { $$ = $1 }
         |   IDENTIFIER '.' IDENTIFIER   { $$ = $1 + "." + $3 }
         |   '*' IDENTIFIER '.' IDENTIFIER
                                         { $$ = "*" + $2 + "." + $4 }
+        |   IDENTIFIER '{' '}'          { $$ = $1 + "{}" }
 
 body:       body_stmt                   { $$ = &astList{[]iAstNode{$1}} }
         |   body ';' body_stmt          { $$.Add($3) }
@@ -84,14 +85,23 @@ body_stmt:                              { $$ = nil }
         |   expr                        { $$ = &astWriteValue{$1} }
         |   loop                        { $$ = $1 }
         |   condition                   { $$ = $1 }
-        |   var_value '=' expr          { $$ = &astAssignment{"=", &astValue{$1}, $3} }
-        |   IDENTIFIER ASSIGNMENT expr  { $$ = &astAssignment{":=", &astValue{$1}, $3} }
+        |   identifiers_list '=' exprs_list
+                                        { $$ = &astAssignment{"=", $1, $3} }
+        |   identifiers_list ASSIGNMENT exprs_list
+                                        { $$ = &astAssignment{":=", $1, $3} }
         |   CONTENT_MARKER              { $$ = &astWriteContent{} }
         |   PROCESS IDENTIFIER '(' param_list ')'
                                         { $$ = &astProcessTemplate{"", $2, $4} }
         |   PROCESS IDENTIFIER '.' IDENTIFIER '(' param_list ')'
                                         { $$ = &astProcessTemplate{$2, $4, $6} }
         |   filter_expr                 { $$ = &astWriteString{$1} }
+
+identifiers_list: IDENTIFIER            { $$ = &astList{[]iAstNode{&astValue{$1}}} }
+        |   identifiers_list ',' IDENTIFIER
+                                        { $$.Add(&astValue{$3}) }
+
+exprs_list: expr                        { $$ = &astList{[]iAstNode{$1}} }
+        |   exprs_list ',' expr         { $$.Add($3) }
 
 filter_expr: expr '|' filter            { $3.value = $1; $$ = $3 }
         |   filter_expr '|' filter      { $3.value = $1; $$ = $3 }
@@ -125,6 +135,8 @@ var_value:  var_value '.' IDENTIFIER    { $$ = $1 + "." + $3 }
         |   var_value '[' STRING ']'    { $$ = $1 + "[" + $3 + "]" }
         |   '*' '(' var_value ')'       { $$ = "*(" + $3 + ")" }
         //ToDo:|   '*' var_value               { $$ = "*" + $2 }
+        |   var_value '.' '(' var_type ')'
+                                        { $$ = $1 + ".(" + $4 + ")" }
         |   IDENTIFIER                  { $$ = $1 }
 
 

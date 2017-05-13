@@ -18,6 +18,7 @@
 * [Filters](#filters)
   + [html](#html)
 * [Operators](#operators)
+  + [Assignments](#assignments)
   + [Comparison](#comparison)
   + [Mathematical](#mathematical)
   + [Boolean](#boolean)
