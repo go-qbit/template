@@ -62,6 +62,7 @@ var reTokens = []reToken{
 	{`^(?:\")(?:[^\\\"]*(?:\\.[^\\\"]*)*)(?:\")`, STRING},
 	{`^-?\d+(?:[.,]\d+)?`, NUMBER},
 	{`^[a-zA-Z_][a-zA-Z0-9\_]*`, IDENTIFIER},
+	{`(?s)^/\*.+?\*/`, COMMENT},
 }
 
 var compiledReTokens = getCompiledReTokens()
@@ -80,6 +81,7 @@ func getCompiledReTokens() []compiledReToken {
 }
 
 func (x *exprLex) Lex(yylval *yySymType) int {
+L1:
 	for {
 		if len(x.text) == 0 {
 			return 0
@@ -101,6 +103,11 @@ func (x *exprLex) Lex(yylval *yySymType) int {
 		for _, token := range compiledReTokens {
 			if m := token.re.FindString(x.text); m != "" {
 				x.text = x.text[len(m):]
+
+				if token.value == COMMENT {
+					continue L1
+				}
+
 				yylval.string = string(m)
 
 				x.curLine += strings.Count(yylval.string, "\n")

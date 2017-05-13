@@ -44,6 +44,7 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 		io.WriteString(w, utils.ToString(a))
 		Processtest1(ctx, w, "test")
 		w.Write(s5d98090b412b8b80b94b6c9ffeea34c2)
+		a = i + 1
 	})
 }
 
