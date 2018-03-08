@@ -1,4 +1,4 @@
-//go:generate go tool yacc template.y
+//go:generate goyacc template.y
 
 package template
 

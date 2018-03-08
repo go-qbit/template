@@ -56,7 +56,7 @@
     %]
 [% END %]
 
-[% TEMPLATE test1(s string) %]
+[% TEMPLATE test1(s string, buffers []*bts.Buffer) %]
     [% s | html | html %]
 [% END %]
 

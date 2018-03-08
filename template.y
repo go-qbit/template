@@ -77,6 +77,9 @@ var_type:   IDENTIFIER                  { $$ = $1 }
         |   '*' IDENTIFIER '.' IDENTIFIER
                                         { $$ = "*" + $2 + "." + $4 }
         |   IDENTIFIER '{' '}'          { $$ = $1 + "{}" }
+        |   '[' ']' '*' IDENTIFIER      { $$ = "[]*" + $4 }
+        |   '[' ']' '*' IDENTIFIER '.' IDENTIFIER
+                                        { $$ = "[]*" + $4 + "." + $6 }
 
 body:       body_stmt                   { $$ = &astList{[]iAstNode{$1}} }
         |   body ';' body_stmt          { $$.Add($3) }
