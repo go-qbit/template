@@ -40,6 +40,7 @@ imports:    IMPORT '(' import_list ')' ';'
 
 import_list: import_stmt                { $$ = &astList{[]iAstNode{$1}} }
         |   import_list ',' import_stmt { $$.Add($3) }
+        |   import_list import_stmt     { $$.Add($2) }
 
 import_stmt: STRING                     { $$ = &astImport{"", $1} }
         |   IDENTIFIER STRING           { $$ = &astImport{$1, $2} }

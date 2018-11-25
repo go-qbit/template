@@ -1,6 +1,6 @@
 [% IMPORT(
     bts "bytes",
-    "github.com/go-qbit/template/test/templates/extwrapper",
+    "github.com/go-qbit/template/test/templates/extwrapper"
     "github.com/go-qbit/template/filter"
 ) %]
 
