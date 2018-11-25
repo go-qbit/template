@@ -3,7 +3,7 @@ package template
 import "io"
 
 type astFunc struct {
-	name   string
+	name   iAstNode
 	params *astList
 }
 
@@ -17,14 +17,15 @@ func (n *astFunc) GetImports() []string {
 
 func (n *astFunc) GetStrings() []string {
 	if n.params != nil {
-		return n.params.GetStrings()
+		return append(n.name.GetStrings(), n.params.GetStrings()...)
 	}
 
-	return []string{}
+	return n.name.GetStrings()
 }
 
 func (n *astFunc) WriteGo(w io.Writer, opts *GenGoOpts) {
-	io.WriteString(w, n.name+"(")
+	n.name.WriteGo(w, opts)
+	io.WriteString(w, "(")
 	if n.params != nil {
 		for i, param := range n.params.children {
 			if i > 0 {

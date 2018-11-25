@@ -12,3 +12,5 @@ type TestType struct {
 		F1 map[string]int
 	}
 }
+
+type StringMap map[string]string

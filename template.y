@@ -17,8 +17,8 @@ import (
 %token  IDENTIFIER STRING NUMBER FOR IN IF ELSE END VARS TEMPLATE IMPORT WRAPPER USE CONTENT_MARKER
 %token  PROCESS EQ NE GE LE OR AND NOT ASSIGNMENT INC DEC COMMENT
 
-%type   <string>        STRING IDENTIFIER NUMBER var_type var_value
-%type	<iAstNode>      top file header import_stmt macros_stmt var body_stmt filter_expr expr loop condition
+%type   <string>        STRING IDENTIFIER NUMBER var_type
+%type	<iAstNode>      top file header import_stmt macros_stmt var body_stmt filter_expr expr loop condition var_value
 %type   <astList>       imports import_list macroses param_list var_list body identifiers_list exprs_list
 %type   <astUseWrapper> use_wrapper
 %type   <astFilter>     filter
@@ -125,22 +125,21 @@ expr:       expr '>' expr               { $$ = &astExpr{">", $1, $3} }
         |   expr AND expr               { $$ = &astExpr{"&&", $1, $3} }
         |   NOT expr                    { $$ = &astExpr{"!", nil, $2} }
         |   '(' expr ')'                { $$ = &astParenthesis{$2} }
-        |   var_value INC               { $$ = &astExpr{"++", &astValue{$1}, nil} }
-        |   var_value DEC               { $$ = &astExpr{"--", &astValue{$1}, nil} }
+        |   var_value INC               { $$ = &astExpr{"++", $1, nil} }
+        |   var_value DEC               { $$ = &astExpr{"--", $1, nil} }
         |   var_value '(' param_list ')'
                                         { $$ = &astFunc{$1, $3} }
-        |   var_value                   { $$ = &astValue{$1} }
+        |   var_value                   { $$ = $1 }
         |   STRING                      { $$ = &astString{$1} }
         |   NUMBER                      { $$ = &astValue{$1} }
 
-var_value:  var_value '.' IDENTIFIER    { $$ = $1 + "." + $3 }
-        |   var_value '[' NUMBER ']'    { $$ = $1 + "[" + $3 + "]" }
-        |   var_value '[' STRING ']'    { $$ = $1 + "[" + $3 + "]" }
-        |   '*' '(' var_value ')'       { $$ = "*(" + $3 + ")" }
+var_value:  var_value '.' IDENTIFIER    { $$ = &astStructField{$1, $3} }
+        |   var_value '[' expr ']'      { $$ = &astIndexedVar{$1, $3} }
+        |   '*' '(' var_value ')'       { $$ = &astRef{$3} }
         //ToDo:|   '*' var_value               { $$ = "*" + $2 }
         |   var_value '.' '(' var_type ')'
-                                        { $$ = $1 + ".(" + $4 + ")" }
-        |   IDENTIFIER                  { $$ = $1 }
+                                        { $$ = &astTypeConv{$1, $4} }
+        |   IDENTIFIER                  { $$ = &astValue{$1} }
 
 
 filter:     IDENTIFIER                  { $$ = &astFilter{name: $1} }
