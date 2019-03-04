@@ -43,6 +43,10 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 		a := i
 		a = i
 		io.WriteString(w, utils.ToString(a))
+		m := make(StringMap)
+		io.WriteString(w, utils.ToString(m["key"]))
+		key := "key"
+		io.WriteString(w, utils.ToString(m[key]))
 		t1, t2, t3 := 1, 2, 3
 		t1, t2, t3 = t3+1, t1+2, t2+3
 		_, ok := iv.(*int)
@@ -55,7 +59,7 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 	})
 }
 
-func Processtest1(ctx context.Context, w io.Writer, s string) {
+func Processtest1(ctx context.Context, w io.Writer, s string, buffers []*bts.Buffer) {
 	io.WriteString(w, filter.Filterhtml(filter.Filterhtml(s)))
 }
 
