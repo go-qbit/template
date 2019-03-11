@@ -78,6 +78,8 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
 1. Define a `User` type in `template/user.go`:
     
     ```go
+    package template
+
     type User struct {
         Name     string
         Lastname string
@@ -85,7 +87,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
         IsMan    bool
     }
     ```
-1. Write a go package that will process template:
+1. Write a `main.go` file that will process the template:
     
     ```go
     //go:generate ttgen template/*.gtt
@@ -98,7 +100,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
     )
     
     func main()  {
-         templates.ProcessTest(context.Background(), os.Stdout, "<Header>", []templates.User{
+         template.ProcessTest(context.Background(), os.Stdout, "<Header>", []template.User{
                 {"Ivan", "Sidorov", 20, true},
                 {"Petr", "Ivanov", 30, true},
             },
@@ -182,7 +184,7 @@ BenchmarkQBitTemplate-4            30000            407632 ns/op           36096
             io.WriteString(w, Filterhtml(user.Lastname))
         }
         ```
-        
+1. Run the application: `go run main.go`
 ## Syntax
 
 ### Intro
