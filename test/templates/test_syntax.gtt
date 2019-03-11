@@ -48,7 +48,7 @@
         int_ptr
     [% END %]
 
-    [% PROCESS test1("test") %]
+    [% PROCESS test1("test", nil) %]
 
     "Quoted text"
     With new line

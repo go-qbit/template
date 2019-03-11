@@ -33,6 +33,7 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 		io.WriteString(w, filter.Filterhtml(s[10]))
 		io.WriteString(w, filter.Filterhtml(s[10]))
 		io.WriteString(w, utils.ToString(t[0].StructField.F1["test"]))
+		io.WriteString(w, filter.Filterhtml(`Text`))
 		io.WriteString(w, utils.ToString(5+10*15/20%4))
 		for i, v := range t {
 			io.WriteString(w, utils.ToString(i))
@@ -53,7 +54,7 @@ func ProcessTestExprSyntax(ctx context.Context, w io.Writer, i int, b bool, s st
 		if ok {
 			w.Write(s6ba52433c82d98af8fafe7a4cc4ddaed)
 		}
-		Processtest1(ctx, w, "test")
+		Processtest1(ctx, w, "test", nil)
 		w.Write(s5d98090b412b8b80b94b6c9ffeea34c2)
 		a = i + 1
 	})
